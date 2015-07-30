@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tactics Online</title>
+	<link rel="stylesheet" href="public/styles/blitz.css">
+	<link rel="stylesheet" href="public/styles/site.css">
+	<style>
+		*, *:before, *:after {
+			box-sizing: border-box;
+		}
+
+		body {
+		}
+
+		.map-row {
+			overflow: hidden;
+		}
+		
+		.map-cell {
+			height: 50px;
+			width: 50px;
+			border: 1px solid black;
+			background-color: gray;
+			float: left;
+			color: white;
+		}
+
+		.map-cell_moveable {
+			background-color: blue;
+		}
+
+		.map-cell_attackable {
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+
+	<section id="map" class="map"></section>
+
+	<section id="action-menu" class="action-menu">
+		<div class="active-character p20">
+			
+		</div>
+
+		<div class="">
+			<button class="p20" data-action="move">Move</button>
+		</div>
+		<div class="">
+			<button class="p20" data-action="attack">Attack</button>
+		</div>
+		<div class="m10-0">
+			<button class="p20" data-action="skip">Skip Turn</button>
+		</div>
+	</section>
+
+	<section id="action-effects-view">
+		<div class="agent-character">
+			<h2>Agent: <span class="agent-name"></span></h2>
+			<div class="agent-health-change"></div>
+		</div>
+		<div class="patient-character">
+			<h2>Patient: <span class="patient-name"></span></h2>
+			<div class="patient-health-change"></div>
+		</div>
+	</section>
+
+</body>
+
+	<!-- Data being used -->
+	
+	<script src="node_modules/jquery/dist/jquery.js"></script>
+	<script src="public/js/game/data/characters/characters.js"></script>
+	<script src="public/js/game/data/maps/map.js"></script>
+	
+	<script src="public/js/game/game.js"></script>
+	
+
+
+</html>
