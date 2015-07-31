@@ -14,6 +14,8 @@ var Game = (function () {
  * @type {Boolean}
  */
 var gameOn = true;
+var team1Alive = false;
+var team2Alive = false;
 /**
  * This represents the character that is currently active
  * @type {Character}
@@ -89,18 +91,32 @@ function gameLoop() {
     //if game still call gameLoop again
     if (gameOn)
         setTimeout(gameLoop, 1000);
+    else
+        displayVictor();
+}
+/**
+ * Display the victory message
+ */
+function displayVictor() {
+    if (team1Alive)
+        $('#victory-message h1').text('Team 1 Wins!');
+    else
+        $('#victory-message h1').text('Team 2 Wins!');
 }
 /**
  * Decides if the game is still going
  * @return {boolean} the new value of gameOn
  */
 function isGameOn() {
-    var t1 = false, t2 = false;
+    team1Alive = false;
+    team2Alive = false;
     characters.forEach(function (c) {
         if (c.stats.state.hp > 0)
-            (c.team === 1) ? t1 = true : t2 = true;
+            (c.team === 1) ?
+                team1Alive = true :
+                team2Alive = true;
     });
-    return (t1 && t2);
+    return (team1Alive && team2Alive);
 }
 /**
  * Advance all things that have a turn according to their speed.
@@ -109,7 +125,7 @@ function isGameOn() {
 function advanceTime() {
     characters.forEach(function (c) {
         c.stats.state.turn += c.stats.state.speed;
-        if (c.stats.state.turn >= 100)
+        if (c.stats.state.hp > 0 && c.stats.state.turn >= 100)
             currentTurn = c;
     });
 }
