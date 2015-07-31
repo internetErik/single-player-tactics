@@ -1,4 +1,6 @@
 /// <reference path="../../tsd/typings/tsd.d.ts" />
+/// <reference path="data/characters/characters.ts" />
+// import * as Character from 'game/data/characters/characters';
 //stubs/ideas
 var Game = (function () {
     function Game() {
@@ -7,11 +9,41 @@ var Game = (function () {
     }
     return Game;
 })();
-// is the game still on?
+/**
+ * Flag that tells us if the game is still going
+ * @type {Boolean}
+ */
 var gameOn = true;
+/**
+ * This represents the character that is currently active
+ * @type {Character}
+ */
 var currentTurn = null;
+/**
+ * Keeps track of the kind of action being performed by active character
+ * @type {String} in the future, perhaps, enum?
+ */
 var turnMode = null;
-var $map, $rows;
+/**
+ * Has the active character moved?
+ * @type {Boolean}
+ */
+var moved = false;
+/**
+ * Has the active character acted?
+ * @type {Boolean}
+ */
+var acted = false;
+/**
+ * Represents the map
+ * @type {jQuery}
+ */
+var $map;
+/**
+ * Cache of all the rows in the map
+ * @type {jQuery}
+ */
+var $rows;
 /**
  * This function kicks off the game
  */
@@ -39,7 +71,6 @@ function game() {
  * I am using a setTimeout instead of a while loop
  */
 function gameLoop() {
-    console.log("gameLoop()");
     //
     // When there is a current move, we will just fall 
     // through this function, that means that if the user 
@@ -51,11 +82,25 @@ function gameLoop() {
     //character/event with the current turn
     while (!currentTurn)
         advanceTime();
+    if (currentTurn)
+        gameOn = isGameOn();
     //Put current characters name over the menu
     $('.active-character').text(currentTurn.stats.name);
     //if game still call gameLoop again
     if (gameOn)
         setTimeout(gameLoop, 1000);
+}
+/**
+ * Decides if the game is still going
+ * @return {boolean} the new value of gameOn
+ */
+function isGameOn() {
+    var t1 = false, t2 = false;
+    characters.forEach(function (c) {
+        if (c.stats.state.hp > 0)
+            (c.team === 1) ? t1 = true : t2 = true;
+    });
+    return (t1 && t2);
 }
 /**
  * Advance all things that have a turn according to their speed.
@@ -88,21 +133,34 @@ function cellInteraction() {
         attack.bind(this)();
 }
 /**
+ * Checks to see if the player has acted and moved
+ *
+ * 'Over' may not be the best word here
+ *
+ * @return {boolean} if turn is over
+ */
+function turnOver() {
+    return (moved && acted);
+}
+/**
  * positions character and clears current turn when a movement has been
  * decided on
  */
 function move() {
     //we only do something if there is a character with a turn
     if (currentTurn) {
-        var x = this.getAttribute('data-x'), y = this.getAttribute('data-y');
+        var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), $cell;
+        $cell = getMapCell(x, y);
         //selected position may fail
-        if (moveableMapCell(getMapCell(x, y))) {
+        if (moveableMapCell($cell)) {
             currentTurn.stats.state.position.x = x;
             currentTurn.stats.state.position.y = y;
             clearCharacterInDom(currentTurn);
             positionCharacterInDom(currentTurn);
             clearMoveGrid();
-            clearCurrentTurn();
+            moved = true;
+            if (turnOver())
+                clearCurrentTurn();
         }
     }
 }
@@ -119,15 +177,20 @@ function attack() {
         if (attackableMapCell($cell)) {
             //get target character
             patientId = $cell.children('.character').attr('id');
-            patient = characters.filter(function (c) {
-                return c._id === patientId;
-            })[0];
+            patient = characters.reduce(function (p, c) {
+                if (p)
+                    return p;
+                if (c._id === patientId)
+                    return c;
+            }, null);
             showEffectStats(currentTurn, patient);
             if (confirm("Are you sure you want to attack?")) {
                 //apply effects - damage for now
                 performAction(currentTurn, patient);
                 clearAttackGrid();
-                clearCurrentTurn();
+                acted = true;
+                if (turnOver())
+                    clearCurrentTurn();
             }
             clearEffectStats();
         }
@@ -195,8 +258,11 @@ function cancelAction() {
  * for the character
  */
 function clearCurrentTurn() {
+    cancelAction();
     currentTurn.stats.state.turn = 0;
     currentTurn = null;
+    moved = false;
+    acted = false;
     turnMode = null;
     $('.active-character').text('');
 }
@@ -212,7 +278,7 @@ function bindMenu() {
  * Simply clears the current turn
  */
 function skipTurn() {
-    if (currentTurn) {
+    if (confirm("Skip your turn?") && currentTurn) {
         clearCurrentTurn();
     }
 }
@@ -221,7 +287,7 @@ function skipTurn() {
  */
 function moveAction() {
     //we only do something if there is a character with a turn
-    if (currentTurn) {
+    if (currentTurn && !moved) {
         showMoveGrid(currentTurn);
         turnMode = 'move';
     }
@@ -230,7 +296,7 @@ function moveAction() {
  * Shows the moveable area.
  * Should calculate this, but now just effects entire area.
  *
- * @param {[type]} c [description]
+ * @param {Character} c [description]
  */
 function showMoveGrid(c) {
     var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
@@ -248,7 +314,7 @@ function clearMoveGrid() {
  * This function is used to show the attack area, and make it selectable
  */
 function attackAction() {
-    if (currentTurn) {
+    if (currentTurn && !acted) {
         showAttackGrid(currentTurn);
         turnMode = 'attack';
     }
@@ -258,7 +324,7 @@ function attackAction() {
  *
  * ToDo: this should be calculated.
  *
- * @param {[type]} c [description]
+ * @param {Character} c [description]
  */
 function showAttackGrid(c) {
     var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
@@ -280,9 +346,8 @@ function loadMapInDOM() {
     var i = 0, j = 0, row = ''; //string used in appendTo()
     for (i = 0; i <= basicMap.size.width; i += 1) {
         row = '<div class="map-row">';
-        for (j = 0; j < basicMap.size.height; j += 1) {
+        for (j = 0; j < basicMap.size.height; j += 1)
             row += '<div class="map-cell" data-x="' + j + '" data-y="' + i + '"></div>';
-        }
         row += '</div>';
         $(row).appendTo($map);
     }
@@ -349,8 +414,8 @@ function attackableMapCell($cell) {
 /**
  * given an x and y position, get the cell on the map
  *
- * @param {Number} x coordinate
- * @param {Number} y coordinate
+ * @param {number} x coordinate
+ * @param {number} y coordinate
  */
 function getMapCell(x, y) {
     //$rows is a global

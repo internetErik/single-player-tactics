@@ -18,6 +18,7 @@ var Entity = (function () {
 var characters = [
     {
         _id: '1',
+        team: 1,
         stats: {
             name: 'Erik',
             exp: 0,
@@ -125,6 +126,7 @@ var characters = [
     },
     {
         _id: '2',
+        team: 2,
         stats: {
             name: 'Liesl',
             exp: 0,
