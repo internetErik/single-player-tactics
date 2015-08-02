@@ -14,6 +14,10 @@ var Game = (function () {
  * @type {Boolean}
  */
 var gameOn = true;
+/**
+ * These track if the teams are dead yet
+ * @type {Boolean}
+ */
 var team1Alive = false;
 var team2Alive = false;
 /**
@@ -65,8 +69,8 @@ function game() {
     $rows = $('#map .map-row');
     //position characters initially
     loadCharactersInDOM();
-    //kick off timeout
-    setTimeout(gameLoop, 0);
+    //kick off game loop
+    gameLoop();
 }
 /**
  * This is the function that is called each time for the game loop
