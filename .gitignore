@@ -1,1 +1,4 @@
 node_modules
+
+#this file is built by gulp
+public/js 

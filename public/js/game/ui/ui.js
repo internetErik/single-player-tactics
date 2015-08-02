@@ -105,6 +105,13 @@ function positionCharacterInDom(c) {
     $(insert).appendTo($cell);
 }
 /**
+ * Very simple removal of character from the DOM
+ * the characters _id was used in creating the DOM element
+ */
+function clearCharacterInDom(c) {
+    $('#' + c._id).remove();
+}
+/**
  * This displays what will happen from an effect
  *
  * @param {Character} agent   The actor
@@ -134,4 +141,40 @@ function clearEffectStats() {
     $agentName.text('');
     $patientName.text('');
     $pHealthChange.text('');
+}
+/**
+ * Shows the moveable area.
+ * Should calculate this, but now just effects entire area.
+ *
+ * @param {Character} c [description]
+ */
+function showMoveGrid(c) {
+    var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
+    //we could calculate, but instead we'll just make the whole map moveable
+    $('.map-cell').addClass('map-cell_moveable');
+}
+/**
+ * This function is called to stop movement action.
+ * Used both if a movement is selected, or if it is cancelled
+ */
+function clearMoveGrid() {
+    $('.map-cell').removeClass('map-cell_moveable');
+}
+/**
+ * Add attackable class to all map cells
+ *
+ * ToDo: this should be calculated.
+ *
+ * @param {Character} c [description]
+ */
+function showAttackGrid(c) {
+    var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
+    //we could calculate, but instead we'll just make the whole map moveable
+    $('.map-cell').addClass('map-cell_attackable');
+}
+/**
+ * Remove the attackable class from map cells
+ */
+function clearAttackGrid() {
+    $('.map-cell').removeClass('map-cell_attackable');
 }

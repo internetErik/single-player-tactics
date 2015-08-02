@@ -1,4 +1,5 @@
 /// <reference path="../../tsd/typings/tsd.d.ts" />
+/// <reference path="data/maps/map.ts" />
 /// <reference path="data/characters/characters.ts" />
 /// <reference path="helpers/helpers.ts" />
 /// <reference path="ui/ui.ts" />
@@ -8,16 +9,57 @@
 //stubs/ideas
 class Game {
 	gameOn: boolean;
-	// currentTurn: Character;
-	eventQueue: Array<any>;
-	map: any;
+	team1Alive: boolean;
+	team2Alive: boolean;
+
+	activeTurn: Turn;
+	map: Map;
 
 	constructor() {
-		//initialize game
-		//start loop
+		initGameUI(basicMap, characters);
 	}
+
+	public game = () => {
+		this.gameLoop();
+	}
+
+	/**
+	 * This is the function that is called each time for the game loop
+	 * I am using a setTimeout instead of a while loop
+	 */
+	private gameLoop() {
+		//
+		// When there is a current move, we will just fall 
+		// through this function, that means that if the user 
+		// is putzing around and entering in and out of menus 
+		// as long as they don't end their turn, it will
+		// still have their turn 
+		//
+
+		//this loop runs until we assign something to the
+		//character/event with the current turn
+		while(!currentTurn)
+			advanceTime(characters);
+
+		if (currentTurn)
+			gameOn = isGameOn(characters);
+		
+		//Put current characters name over the menu
+		$('.active-character').text(currentTurn.stats.name);		
+		
+		//if game still call gameLoop again
+		if (gameOn)
+			setTimeout(this.gameLoop, 1000);
+		else
+			displayVictor(team1Alive, team2Alive);
+	}
+
 }
 
+class Turn {
+	//turns can be events, or character turns
+	turnType: string;
+}
 
 
 /**
@@ -53,51 +95,6 @@ var moved = false;
  * @type {Boolean}
  */
 var acted = false;
-
-/**
- * This function kicks off the game
- */
-function game() {
-	//
-	// in the future, there should be a menu loop here?
-	//
-	
-	initGameUI(basicMap, characters);
-
-	//kick off game loop
-	gameLoop();
-}
-
-/**
- * This is the function that is called each time for the game loop
- * I am using a setTimeout instead of a while loop
- */
-function gameLoop() {
-	//
-	// When there is a current move, we will just fall 
-	// through this function, that means that if the user 
-	// is putzing around and entering in and out of menus 
-	// as long as they don't end their turn, it will
-	// still have their turn 
-	//
-
-	//this loop runs until we assign something to the
-	//character/event with the current turn
-	while(!currentTurn)
-		advanceTime(characters);
-
-	if (currentTurn)
-		gameOn = isGameOn(characters);
-	
-	//Put current characters name over the menu
-	$('.active-character').text(currentTurn.stats.name);		
-	
-	//if game still call gameLoop again
-	if (gameOn)
-		setTimeout(gameLoop, 1000);
-	else
-		displayVictor(team1Alive, team2Alive);
-}
 
 /**
  * function that is called when a cell is clicked on.  
@@ -260,29 +257,6 @@ function moveAction() {
 }
 
 /**
- * Shows the moveable area.  
- * Should calculate this, but now just effects entire area.
- * 
- * @param {Character} c [description]
- */
-function showMoveGrid(c) {
-	var mv = c.stats.state.move,
-		x = c.stats.state.position.x,
-		y = c.stats.state.position.y;
-	
-	//we could calculate, but instead we'll just make the whole map moveable
-	$('.map-cell').addClass('map-cell_moveable');
-}
-
-/**
- * This function is called to stop movement action.
- * Used both if a movement is selected, or if it is cancelled
- */
-function clearMoveGrid() {
-	$('.map-cell').removeClass('map-cell_moveable');
-}
-
-/**
  * This function is used to show the attack area, and make it selectable
  */
 function attackAction() {
@@ -292,87 +266,7 @@ function attackAction() {
 	}
 }
 
-/**
- * Add attackable class to all map cells
- *
- * ToDo: this should be calculated.
- * 
- * @param {Character} c [description]
- */
-function showAttackGrid(c) {
-	var mv = c.stats.state.move,
-		x = c.stats.state.position.x,
-		y = c.stats.state.position.y;
-	
-	//we could calculate, but instead we'll just make the whole map moveable
-	$('.map-cell').addClass('map-cell_attackable');
-}
-
-/**
- * Remove the attackable class from map cells
- */
-function clearAttackGrid() {
-	$('.map-cell').removeClass('map-cell_attackable');
-}
-
-/**
- * This checks to see if a cell is uninhabited and exists
- * 
- * @param  {jQuery object}  $cell the cell that we are checking - may be null
- * @return {boolean}       True means that this is a safe cell to move to
- */
-function moveableMapCell($cell):boolean {
-	//if this position is illegal, or there is someone there return false
-	if (!$cell || $cell.length === 0)
-		return false;
-
-	//does the cell have the moveable class?
-	if (!$cell.hasClass('map-cell_moveable'))
-		return false;
-
-	//does the cell have a character in it already?
-	if ($cell.children('.character').length > 0)
-		return false;
-
-	return true;
-}
-
-/**
- * Determines if a cell is a valid target
- * 
- * @param  {[type]}  $cell [description]
- * @return {boolean}       [description]
- */
-function attackableMapCell($cell):boolean {
-	//does the cell exist?
-	if(!$cell || $cell.length === 0)
-		return false;
-
-	//does the cell have the attackable class?
-	if (!$cell.hasClass('map-cell_attackable'))
-		return false;
-
-	return true;
-}
-
-/**
- * given an x and y position, get the cell on the map
- * 
- * @param {number} x coordinate
- * @param {number} y coordinate
- */
-function getMapCell(x:number, y:number) {
-	//$rows is a global
-	return $( $( $rows[y] ).children('.map-cell')[x] );
-}
-
-/**
- * Very simple removal of character from the DOM
- * the characters _id was used in creating the DOM element
- */
-function clearCharacterInDom(c) {
-	$('#' + c._id).remove();
-}
+var game = new Game();
 
 // kick off the game loop
-$(document).ready(game);
+$(document).ready(game.game);

@@ -1,3 +1,7 @@
+class Map {
+	size: Object;
+}
+
 var basicMap = {
 	size: {
 		height: 10,
