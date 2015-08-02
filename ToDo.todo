@@ -1,7 +1,0 @@
-
- ✔ Turns should include attack + move.   @done (15-07-31 08:24)
-   ✔ Should be able to end Turn @done (15-07-31 08:24)
- ☐ Create teams of characters
-   ☐ Teams should be of more than 1 character
- ☐ Determine when a game is over
-   ☐ Display some kind of victory message?
