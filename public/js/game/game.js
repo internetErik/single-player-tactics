@@ -43,34 +43,13 @@ var moved = false;
  */
 var acted = false;
 /**
- * Represents the map
- * @type {jQuery}
- */
-var $map;
-/**
- * Cache of all the rows in the map
- * @type {jQuery}
- */
-var $rows;
-/**
  * This function kicks off the game
  */
 function game() {
     //
     // in the future, there should be a menu loop here?
     //
-    //init global map
-    $map = $('#map');
-    //bind click events on menu 
-    bindMenu();
-    //prepare the game
-    loadMapInDOM();
-    //set up events on map
-    bindCells();
-    //cache the rows of the map
-    $rows = $('#map .map-row');
-    //position characters initially
-    loadCharactersInDOM();
+    initGameUI(basicMap, characters);
     //kick off game loop
     gameLoop();
 }
@@ -89,9 +68,9 @@ function gameLoop() {
     //this loop runs until we assign something to the
     //character/event with the current turn
     while (!currentTurn)
-        advanceTime();
+        advanceTime(characters);
     if (currentTurn)
-        gameOn = isGameOn();
+        gameOn = isGameOn(characters);
     //Put current characters name over the menu
     $('.active-character').text(currentTurn.stats.name);
     //if game still call gameLoop again
@@ -99,38 +78,6 @@ function gameLoop() {
         setTimeout(gameLoop, 1000);
     else
         displayVictor(team1Alive, team2Alive);
-}
-/**
- * Decides if the game is still going
- * @return {boolean} the new value of gameOn
- */
-function isGameOn() {
-    team1Alive = false;
-    team2Alive = false;
-    characters.forEach(function (c) {
-        if (c.stats.state.hp > 0)
-            (c.team === 1) ?
-                team1Alive = true :
-                team2Alive = true;
-    });
-    return (team1Alive && team2Alive);
-}
-/**
- * Advance all things that have a turn according to their speed.
- * If anyone gets turn >= 100, set currentTurn to them
- */
-function advanceTime() {
-    characters.forEach(function (c) {
-        c.stats.state.turn += c.stats.state.speed;
-        if (c.stats.state.hp > 0 && c.stats.state.turn >= 100)
-            currentTurn = c;
-    });
-}
-/**
- * Bind the map cells to actions
- */
-function bindCells() {
-    $('#map .map-cell').click(cellInteraction);
 }
 /**
  * function that is called when a cell is clicked on.
@@ -249,14 +196,6 @@ function clearCurrentTurn() {
     $('.active-character').text('');
 }
 /**
- * Bind the various menu options to generic functions
- */
-function bindMenu() {
-    $('#action-menu [data-action=move]').click(moveAction);
-    $('#action-menu [data-action=attack]').click(attackAction);
-    $('#action-menu [data-action=skip]').click(skipTurn);
-}
-/**
  * Simply clears the current turn
  */
 function skipTurn() {
@@ -318,47 +257,6 @@ function showAttackGrid(c) {
  */
 function clearAttackGrid() {
     $('.map-cell').removeClass('map-cell_attackable');
-}
-/**
- * This function loads the map into the DOM
- */
-function loadMapInDOM() {
-    //currently using dummy data for map
-    //data/maps/map.js -> basicMap {}
-    var i = 0, j = 0, row = ''; //string used in appendTo()
-    for (i = 0; i <= basicMap.size.width; i += 1) {
-        row = '<div class="map-row">';
-        for (j = 0; j < basicMap.size.height; j += 1)
-            row += '<div class="map-cell" data-x="' + j + '" data-y="' + i + '"></div>';
-        row += '</div>';
-        $(row).appendTo($map);
-    }
-}
-/**
- * This function loads ALL of the characters into the DOM
- */
-function loadCharactersInDOM() {
-    //currently using dummy data for characters
-    //data/characters/characters.js -> characters [{}]
-    characters.forEach(positionCharacterInDom);
-}
-/**
- * This function loads on character into the DOM. It is called by
- * loadCharactersInDom()
-
- * The character placed in the DOM is given an #id === to the character's _id
- * @param      {Character}  c       This represents a single character
- */
-function positionCharacterInDom(c) {
-    // This line 
-    // 	1) gets the row we are in, then 
-    // 	2) finds the cell in that row, then 
-    // 	3) makes that a jquery object
-    var $cell = getMapCell(c.stats.state.position.x, c.stats.state.position.y), insert = ''; //this is the html we will insert
-    insert = '<span class="character" id="' + c._id + '"">';
-    insert += c.stats.name;
-    insert += '</span>';
-    $(insert).appendTo($cell);
 }
 /**
  * This checks to see if a cell is uninhabited and exists
