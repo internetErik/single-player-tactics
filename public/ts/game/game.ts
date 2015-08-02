@@ -1,5 +1,7 @@
 /// <reference path="../../tsd/typings/tsd.d.ts" />
 /// <reference path="data/characters/characters.ts" />
+/// <reference path="helpers/helpers.ts" />
+/// <reference path="ui/ui.ts" />
 
 // import * as Character from 'game/data/characters/characters';
 
@@ -123,17 +125,7 @@ function gameLoop() {
 	if (gameOn)
 		setTimeout(gameLoop, 1000);
 	else
-		displayVictor();
-}
-
-/**
- * Display the victory message
- */
-function displayVictor() {
-	if (team1Alive)
-		$('#victory-message h1').text('Team 1 Wins!');
-	else 
-		$('#victory-message h1').text('Team 2 Wins!');
+		displayVictor(team1Alive, team2Alive);
 }
 
 /**
@@ -290,56 +282,6 @@ function performAction(agent, patient) {
 
 		patient.stats.state.hp = pNewHealth;
 	}
-}
-
-/**
- * This displays what will happen from an effect
- * 
- * @param {Character} agent   The actor
- * @param {Character} patient the target
- */
-function showEffectStats(agent, patient) {
-	var $actionView = $('#action-effects-view'),
-		$agentName = $actionView.find('.agent-name'),
-		$aHealthChange = $actionView.find('.agent-health-change'),
-		$patientName = $actionView.find('.patient-name'),
-		$pHealthChange = $actionView.find('.patient-health-change'),
-		aDamage = agent.stats.state.damage,
-		aHealth = agent.stats.state.hp,
-		pHealth,
-		pNewHealth;
-	
-	if (patient) {
-		pHealth = patient.stats.state.hp;
-		pNewHealth = pHealth + aDamage;
-
-		//don't let health drop below 0;
-		pNewHealth = (pNewHealth >= 0) ? pNewHealth : 0;
-
-		$agentName.text(agent.stats.name);
-		$patientName.text(patient.stats.name);
-
-		$pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
-	}
-	else {
-		$agentName.text(agent.stats.name);
-		$patientName.text("Nobody");
-	}
-}
-
-/**
- * Clears display information from an effect on a target
- */
-function clearEffectStats() {
-	var $actionView = $('#action-effects-view'),
-		$agentName = $actionView.find('.agent-name'),
-		$aHealthChange = $actionView.find('.agent-health-change'),
-		$patientName = $actionView.find('.patient-name'),
-		$pHealthChange = $actionView.find('.patient-health-change');
-
-	$agentName.text('');
-	$patientName.text('');
-	$pHealthChange.text('');
 }
 
 /**
