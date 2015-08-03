@@ -11,11 +11,18 @@ var Game = (function () {
         this.game = function () {
             _this.gameLoop();
         };
+        if (Game._instance) {
+            throw new Error("Error: Instantiation failed: Use Game.getInstance() instead of new.");
+        }
         this.gameOn = true;
         this.team1Alive = true;
         this.team2Alive = true;
+        Game._instance = this;
         initGameUI(basicMap, characters);
     }
+    Game.getInstance = function () {
+        return this._instance;
+    };
     /**
      * This is the function that is called each time for the game loop
      * I am using a setTimeout instead of a while loop
@@ -62,6 +69,9 @@ var Game = (function () {
         });
         return (this.team1Alive && this.team2Alive);
     };
+    // ToDo: consider module instead of singleton pattern
+    // http://stackoverflow.com/questions/30174078/how-to-define-singleton-in-typescript
+    Game._instance = new Game();
     return Game;
 })();
 var Turn = (function () {
@@ -232,6 +242,6 @@ function attackAction() {
         turnMode = 'attack';
     }
 }
-var game = new Game();
+var game = Game.getInstance();
 // kick off the game loop
 $(document).ready(game.game);

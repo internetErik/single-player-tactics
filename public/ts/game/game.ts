@@ -7,6 +7,10 @@
 //stubs/ideas
 class Game {
 
+	// ToDo: consider module instead of singleton pattern
+	// http://stackoverflow.com/questions/30174078/how-to-define-singleton-in-typescript
+	private static _instance:Game = new Game();
+
 	/**
 	 * Flag that tells us if the game is still going
 	 * @type {Boolean}
@@ -29,11 +33,22 @@ class Game {
 	//end unused fields
 
 	constructor() {
+        
+        if(Game._instance){
+            throw new Error("Error: Instantiation failed: Use Game.getInstance() instead of new.");
+        }
+
 		this.gameOn = true;
 		this.team1Alive = true;
 		this.team2Alive = true;
+		Game._instance = this;
+
 		initGameUI(basicMap, characters);
 	}
+	
+	public static getInstance():Game {
+        return this._instance;
+    }
 
 	public game = () => {
 		this.gameLoop();
@@ -295,7 +310,7 @@ function attackAction() {
 	}
 }
 
-var game = new Game();
+var game = Game.getInstance();
 
 // kick off the game loop
 $(document).ready(game.game);
