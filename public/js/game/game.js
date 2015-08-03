@@ -3,14 +3,17 @@
 /// <reference path="data/characters/characters.ts" />
 /// <reference path="helpers/helpers.ts" />
 /// <reference path="ui/ui.ts" />
-// import * as Character from 'game/data/characters/characters';
 //stubs/ideas
 var Game = (function () {
+    //end unused fields
     function Game() {
         var _this = this;
         this.game = function () {
             _this.gameLoop();
         };
+        this.gameOn = true;
+        this.team1Alive = true;
+        this.team2Alive = true;
         initGameUI(basicMap, characters);
     }
     /**
@@ -30,14 +33,34 @@ var Game = (function () {
         while (!currentTurn)
             advanceTime(characters);
         if (currentTurn)
-            gameOn = isGameOn(characters);
+            this.gameOn = this.isGameOn(characters);
         //Put current characters name over the menu
         $('.active-character').text(currentTurn.stats.name);
         //if game still call gameLoop again
-        if (gameOn)
-            setTimeout(this.gameLoop, 1000);
+        if (this.gameOn)
+            setTimeout(this.gameLoop.bind(this), 1000);
         else
-            displayVictor(team1Alive, team2Alive);
+            displayVictor(this.team1Alive, this.team2Alive);
+    };
+    /**
+     * Decides if the game is still going
+     *
+     * set both teams to dead (teamXAlive = false)
+     * loop through characters.
+     * 	if they are alive, set their team to true
+     *
+     * @return {boolean} the new value of gameOn
+     */
+    Game.prototype.isGameOn = function (characters) {
+        this.team1Alive = false;
+        this.team2Alive = false;
+        characters.forEach(function (c) {
+            if (c.stats.state.hp > 0)
+                (c.team === 1) ?
+                    this.team1Alive = true :
+                    this.team2Alive = true;
+        });
+        return (this.team1Alive && this.team2Alive);
     };
     return Game;
 })();
@@ -46,17 +69,6 @@ var Turn = (function () {
     }
     return Turn;
 })();
-/**
- * Flag that tells us if the game is still going
- * @type {Boolean}
- */
-var gameOn = true;
-/**
- * These track if the teams are dead yet
- * @type {Boolean}
- */
-var team1Alive = false;
-var team2Alive = false;
 /**
  * This represents the character that is currently active
  * @type {Character}
