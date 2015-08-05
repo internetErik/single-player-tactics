@@ -42,7 +42,6 @@ function cacheMap() {
  */
 function loadMapInDOM(map) {
     //currently using dummy data for map
-    //data/maps/map.js -> basicMap {}
     var i = 0, j = 0, row = ''; //string used in appendTo()
     for (i = 0; i <= map.size.width; i += 1) {
         row = '<div class="map-row">';
@@ -69,7 +68,6 @@ function bindCells() {
  */
 function loadCharactersInDOM(characters) {
     //currently using dummy data for characters
-    //data/characters/characters.js -> characters [{}]
     characters.forEach(positionCharacterInDom);
 }
 /**
@@ -121,12 +119,10 @@ function clearCharacterInDom(c) {
  * @param {Character} patient the target
  */
 function showEffectStats(agent, patient) {
-    var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = agent.stats.state.damage, aHealth = agent.stats.state.hp, pHealth, pNewHealth;
+    var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = calculateHealthChange({}, agent, patient), pHealth, pNewHealth;
     if (patient) {
         pHealth = patient.stats.state.hp;
-        pNewHealth = pHealth + aDamage;
-        //don't let health drop below 0;
-        pNewHealth = (pNewHealth >= 0) ? pNewHealth : 0;
+        pNewHealth = calculateRemainingHp({}, agent, patient);
         $agentName.text(agent.stats.name);
         $patientName.text(patient.stats.name);
         $pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
@@ -152,7 +148,6 @@ function clearEffectStats() {
  * @param {Character} c [description]
  */
 function showMoveGrid(c) {
-    var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
     //we could calculate, but instead we'll just make the whole map moveable
     $('.map-cell').addClass('map-cell_moveable');
 }
@@ -171,7 +166,6 @@ function clearMoveGrid() {
  * @param {Character} c [description]
  */
 function showAttackGrid(c) {
-    var mv = c.stats.state.move, x = c.stats.state.position.x, y = c.stats.state.position.y;
     //we could calculate, but instead we'll just make the whole map moveable
     $('.map-cell').addClass('map-cell_attackable');
 }
@@ -180,4 +174,135 @@ function showAttackGrid(c) {
  */
 function clearAttackGrid() {
     $('.map-cell').removeClass('map-cell_attackable');
+}
+/**
+ * function that is called when a cell is clicked on.
+ * It will route to the correct user event.
+ *
+ * I bind the context of the event to the function so
+ * `this` will be the cell clicked on.
+ */
+function cellInteraction() {
+    // how do I not need turnMode?
+    // Could I use the current class on this?
+    if (turnMode === 'move')
+        move.bind(this)();
+    else if (turnMode === 'attack')
+        attack.bind(this)();
+}
+/**
+ * positions character and clears current turn when a movement has been
+ * decided on
+ */
+function move() {
+    //how do I stop needing the currentTurn object?
+    //we only do something if there is a character with a turn
+    if (currentTurn) {
+        var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), $cell;
+        $cell = getMapCell($rows, x, y);
+        //selected position may fail
+        if (moveableMapCell($cell)) {
+            currentTurn.stats.state.position.x = x;
+            currentTurn.stats.state.position.y = y;
+            clearCharacterInDom(currentTurn);
+            positionCharacterInDom(currentTurn);
+            clearMoveGrid();
+            moved = true;
+            if (turnOver())
+                clearCurrentTurn();
+        }
+    }
+}
+/**
+ * This is called when a character is attacking and has clicked on
+ * another cell.  We don't know if this cell has a target in it yet.
+ */
+function attack() {
+    if (currentTurn) {
+        var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), $cell, patientId, patient; //will be the target of action 
+        //get effected cell
+        $cell = getMapCell($rows, x, y);
+        //selected position may fail
+        if (attackableMapCell($cell)) {
+            //get target character
+            //ToDo: must support multiple
+            patientId = $cell.children('.character').attr('id');
+            patient = characters.reduce(function (p, c) {
+                if (p)
+                    return p;
+                if (c._id === patientId)
+                    return c;
+            }, null);
+            showEffectStats(currentTurn, patient);
+            if (confirm("Are you sure you want to attack?")) {
+                //apply effects - damage for now
+                performAction(currentTurn, patient);
+                clearAttackGrid();
+                acted = true;
+                if (turnOver())
+                    clearCurrentTurn();
+            }
+            clearEffectStats();
+        }
+    }
+}
+/**
+ * Deals damage to a target
+ *
+ * ToDo: This should take an action object.
+ * 	The action object will describe the damage.
+ *
+ * @param {Character} agent   The actor
+ * @param {Character} patient the target
+ */
+function performAction(agent, patient) {
+    if (patient)
+        patient.stats.state.hp = calculateRemainingHp({}, agent, patient);
+}
+/**
+ * clear the different map-cell effect classes
+ */
+function cancelAction() {
+    clearMoveGrid();
+    clearAttackGrid();
+}
+/**
+ * This sets the current turn to empty, and resets the turn counter
+ * for the character
+ */
+function clearCurrentTurn() {
+    cancelAction();
+    currentTurn.stats.state.turn = 0;
+    currentTurn = null;
+    moved = false;
+    acted = false;
+    turnMode = null;
+    $('.active-character').text('');
+}
+/**
+ * Simply clears the current turn
+ */
+function skipAction() {
+    if (confirm("Skip your turn?") && currentTurn) {
+        clearCurrentTurn();
+    }
+}
+/**
+ * The function triggered by clicking the 'move' button in the menu
+ */
+function moveAction() {
+    //we only do something if there is a character with a turn
+    if (currentTurn && !moved) {
+        showMoveGrid(currentTurn);
+        turnMode = 'move';
+    }
+}
+/**
+ * This function is used to show the attack area, and make it selectable
+ */
+function attackAction() {
+    if (currentTurn && !acted) {
+        showAttackGrid(currentTurn);
+        turnMode = 'attack';
+    }
 }

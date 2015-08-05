@@ -1,6 +1,28 @@
 // big ass file for helpers.
 // should be refactored into smaller file
 /**
+ * Returns the change in health from an effect
+ * @param {[type]} effect  the action being performed
+ * @param {[type]} agent   the actor
+ * @param {[type]} patient the target of action
+ */
+function calculateHealthChange(effect, agent, patient) {
+    return agent.stats.state.damage + patient.stats.state.defense;
+}
+/**
+ * Returns the remaining hp of characters
+ * doesn't allow a result less than 0
+ *
+ * @param {[type]} effect  The action being performed
+ * @param {[type]} agent   The actor
+ * @param {[type]} patient The target of action
+ */
+function calculateRemainingHp(effect, agent, patient) {
+    var hp = patient.stats.state.hp + calculateHealthChange(effect, agent, patient);
+    //don't allow hp to reduce below 0
+    return (hp >= 0) ? hp : 0;
+}
+/**
  * given an x and y position, get the cell on the map
  *
  * @param {number} x coordinate
@@ -21,6 +43,17 @@ function advanceTime(characters) {
             currentTurn = c;
     });
     return currentTurn;
+}
+/**
+ * Checks to see if the player has acted and moved
+ *
+ * 'Over' may not be the best word here
+ *
+ * @return {boolean} if turn is over
+ */
+function turnOver() {
+    //should this be on the Turn class? should there be a Turn class?
+    return (moved && acted);
 }
 /**
  * This checks to see if a cell is uninhabited and exists
