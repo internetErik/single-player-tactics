@@ -4,6 +4,30 @@
 /// <reference path="helpers/helpers.ts" />
 /// <reference path="ui/ui.ts" />
 
+
+
+/**
+ * This represents the character that is currently active
+ * @type {Character}
+ */
+var currentTurn = null;
+/**
+ * Keeps track of the kind of action being performed by active character
+ * @type {String} in the future, perhaps, enum?
+ */
+var turnMode = null;
+/**
+ * Has the active character moved?
+ * @type {Boolean}
+ */
+var moved = false;
+/**
+ * Has the active character acted?
+ * @type {Boolean}
+ */
+var acted = false;
+
+
 module Game {
 
 	/**
@@ -100,41 +124,20 @@ module Game {
 	 * @return {boolean} the new value of gameOn
 	 */
 	function isGameOn(characters): boolean {
-		this.team1Alive = false;
-		this.team2Alive = false;
+		_instance.team1Alive = false;
+		_instance.team2Alive = false;
 
 		characters.forEach(function(c){
 			if (c.stats.state.hp > 0)
 				(c.team === 1) ? 
-					this.team1Alive = true : 
-					this.team2Alive = true ;
+					_instance.team1Alive = true : 
+					_instance.team2Alive = true ;
 		});
 
-		return (this.team1Alive && this.team2Alive);
+		return (_instance.team1Alive && _instance.team2Alive);
 	}
 
 }
-
-/**
- * This represents the character that is currently active
- * @type {Character}
- */
-var currentTurn = null;
-/**
- * Keeps track of the kind of action being performed by active character
- * @type {String} in the future, perhaps, enum?
- */
-var turnMode = null;
-/**
- * Has the active character moved?
- * @type {Boolean}
- */
-var moved = false;
-/**
- * Has the active character acted?
- * @type {Boolean}
- */
-var acted = false;
 
 (function(){
 	var game = Game.getInstance();
