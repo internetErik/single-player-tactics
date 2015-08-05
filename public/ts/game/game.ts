@@ -4,61 +4,65 @@
 /// <reference path="helpers/helpers.ts" />
 /// <reference path="ui/ui.ts" />
 
-//stubs/ideas
-class Game {
+module Game {
 
-	// ToDo: consider module instead of singleton pattern
-	// http://stackoverflow.com/questions/30174078/how-to-define-singleton-in-typescript
-	private static _instance:Game = new Game();
+	/**
+	 * This is the singleton instance of this class returned by this module
+	 * @type {[type]}
+	 */
+	var _instance = new Game();
+	
+	/**
+	 * Returns the instance of this singleton module
+	 */
+	export function getInstance() {
+        return _instance;
+    }
 
 	/**
 	 * Flag that tells us if the game is still going
 	 * @type {Boolean}
 	 */
-	gameOn: boolean;
+	var gameOn: boolean;
 
 	/**
 	 * These track if the teams are dead yet
 	 * @type {Boolean}
 	 */
-	team1Alive: boolean;
-	team2Alive: boolean;
+	var team1Alive: boolean;
+	var team2Alive: boolean;
 
 	/**
 	 * These not used yet.  Neet to be refactored in
 	 */
-	activeTurn: Turn;
-	map: Map;
-	characters: Array<any>;
+	var activeTurn;
+	var map: Map;
+	// var characters: Array<any>;
 	//end unused fields
 
-	constructor() {
+	function Game() {
         
-        if(Game._instance){
+        // See if we have already tried to initialize this.  
+        // It's impossible to do, really, without code modification, so this is more of a note for future developers
+        if(_instance){
             throw new Error("Error: Instantiation failed: Use Game.getInstance() instead of new.");
         }
 
+        //assign properties on to our _instance
 		this.gameOn = true;
 		this.team1Alive = true;
 		this.team2Alive = true;
-		Game._instance = this;
+		this.gameLoop = gameLoop;
 
+		//basicMap and characters are hardcoded data
 		initGameUI(basicMap, characters);
-	}
-	
-	public static getInstance():Game {
-        return this._instance;
-    }
-
-	public game = () => {
-		this.gameLoop();
 	}
 
 	/**
 	 * This is the function that is called each time for the game loop
 	 * I am using a setTimeout instead of a while loop
 	 */
-	private gameLoop() {
+	function gameLoop() {
 		//
 		// When there is a current move, we will just fall 
 		// through this function, that means that if the user 
@@ -70,19 +74,19 @@ class Game {
 		//this loop runs until we assign something to the
 		//character/event with the current turn
 		while(!currentTurn)
-			advanceTime(characters);
+			currentTurn = advanceTime(characters);
 
 		if (currentTurn)
-			this.gameOn = this.isGameOn(characters);
+			gameOn = isGameOn(characters);
 		
 		//Put current characters name over the menu
 		$('.active-character').text(currentTurn.stats.name);		
 		
 		//if game still call gameLoop again
-		if (this.gameOn)
-			setTimeout(this.gameLoop.bind(this), 1000);
+		if (gameOn)
+			setTimeout(gameLoop, 1000);
 		else
-			displayVictor(this.team1Alive, this.team2Alive);
+			displayVictor(team1Alive, team2Alive);
 	}
 
 
@@ -95,7 +99,7 @@ class Game {
 	 * 
 	 * @return {boolean} the new value of gameOn
 	 */
-	private isGameOn(characters): boolean {
+	function isGameOn(characters): boolean {
 		this.team1Alive = false;
 		this.team2Alive = false;
 
@@ -111,9 +115,10 @@ class Game {
 
 }
 
-class Turn {
-	//turns can be events, or character turns
-	turnType: string;
+class CharacterTurn {
+	turnMode: string;
+	moved: boolean;
+	acted: boolean;
 
 	constructor() {}
 }
@@ -148,6 +153,8 @@ var acted = false;
  * `this` will be the cell clicked on.
  */
 function cellInteraction() {
+	// how do I not need turnMode?
+	// Could I use the current class on this?
 	if (turnMode === 'move') move.bind(this)();
 	else if (turnMode === 'attack') attack.bind(this)();
 }
@@ -160,6 +167,7 @@ function cellInteraction() {
  * @return {boolean} if turn is over
  */
 function turnOver(): boolean {
+	//should this be on the Turn class? should there be a Turn class?
 	return (moved && acted);
 }
 
@@ -168,13 +176,14 @@ function turnOver(): boolean {
  * decided on
  */
 function move() {
+	//how do I stop needing the currentTurn object?
 	//we only do something if there is a character with a turn
 	if(currentTurn) {
 		var x = this.getAttribute('data-x'),
 			y = this.getAttribute('data-y'),
 			$cell;
 
-		$cell = getMapCell(x, y);
+		$cell = getMapCell($rows, x, y);
 		
 		//selected position may fail
 		if(moveableMapCell($cell)) {
@@ -204,7 +213,7 @@ function attack() {
 			patient; //will be the target of action 
 		
 		//get effected cell
-		$cell = getMapCell(x, y);
+		$cell = getMapCell($rows, x, y);
 
 		//selected position may fail
 		if(attackableMapCell($cell)) {
@@ -283,7 +292,7 @@ function clearCurrentTurn() {
 /**
  * Simply clears the current turn
  */
-function skipTurn() {
+function skipAction() {
 	if(confirm("Skip your turn?") && currentTurn) {
 		clearCurrentTurn();
 	}
@@ -310,7 +319,9 @@ function attackAction() {
 	}
 }
 
-var game = Game.getInstance();
+(function(){
+	var game = Game.getInstance();
 
-// kick off the game loop
-$(document).ready(game.game);
+	// kick off the game loop
+	game.gameLoop();
+})();

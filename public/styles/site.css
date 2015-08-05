@@ -4751,6 +4751,15 @@ a {
     display: block;
     clear: both; }
 
+.span-6 {
+  width: 152.63158%;
+  float: left;
+  margin-right: 5.26316%; }
+
+.omega {
+  float: right;
+  margin-right: 0; }
+
 *, *:before, *:after {
   box-sizing: border-box; }
 

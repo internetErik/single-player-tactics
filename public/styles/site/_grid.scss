@@ -1,3 +1,11 @@
 .grid-container {
 	@include container($width-wrapper);
 }
+
+.span-6 {
+	@include span(6);
+}
+
+.omega {
+	@include omega;
+}

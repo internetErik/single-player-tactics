@@ -6,8 +6,7 @@
  * @param {number} x coordinate
  * @param {number} y coordinate
  */
-function getMapCell(x, y) {
-    //$rows is a global
+function getMapCell($rows, x, y) {
     return $($($rows[y]).children('.map-cell')[x]);
 }
 /**
@@ -15,11 +14,13 @@ function getMapCell(x, y) {
  * If anyone gets turn >= 100, set currentTurn to them
  */
 function advanceTime(characters) {
+    var currentTurn;
     characters.forEach(function (c) {
         c.stats.state.turn += c.stats.state.speed;
         if (c.stats.state.hp > 0 && c.stats.state.turn >= 100)
             currentTurn = c;
     });
+    return currentTurn;
 }
 /**
  * This checks to see if a cell is uninhabited and exists

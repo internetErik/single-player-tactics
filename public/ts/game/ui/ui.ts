@@ -17,23 +17,27 @@ var $rows;
  * @param {Array<Character>} characters All the characters being used
  */
 function initGameUI(map, characters) {
-	//init global map
-	cacheMap();
 
-	//prepare the game
-	loadMapInDOM(map);
-	
-	//cache the rows of the map
-	cacheRows();
+	//initialize game only after everything is ready
+	$(document).ready(function() { 
+		//init global map
+		cacheMap();
 
-	//set up events on map
-	bindCells();
+		//prepare the game
+		loadMapInDOM(map);
+		
+		//cache the rows of the map
+		cacheRows();
 
-	//position characters initially
-	loadCharactersInDOM(characters);
+		//set up events on map
+		bindCells();
 
-	//bind click events on menu 
-	bindMenu();
+		//position characters initially
+		loadCharactersInDOM(characters);
+
+		//bind click events on menu 
+		bindMenu();
+	});
 }
 
 /**
@@ -92,7 +96,7 @@ function loadCharactersInDOM(characters) {
 function bindMenu() {
 	$('#action-menu [data-action=move]').click(moveAction);
 	$('#action-menu [data-action=attack]').click(attackAction);
-	$('#action-menu [data-action=skip]').click(skipTurn);
+	$('#action-menu [data-action=skip]').click(skipAction);
 }
 
 
@@ -119,7 +123,7 @@ function positionCharacterInDom(c) {
  	// 	1) gets the row we are in, then 
 	// 	2) finds the cell in that row, then 
 	// 	3) makes that a jquery object
-	var $cell = getMapCell(c.stats.state.position.x, c.stats.state.position.y),
+	var $cell = getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y),
 		insert = ''; //this is the html we will insert
 
 	insert = '<span class="character" id="' + c._id + '"">';
