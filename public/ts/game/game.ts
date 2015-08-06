@@ -79,7 +79,7 @@ module Game {
 		this.gameLoop = gameLoop;
 
 		//basicMap and characters are hardcoded data
-		initGameUI(basicMap, characters);
+		UI.initGameUI(basicMap, characters);
 	}
 
 	/**
@@ -110,7 +110,7 @@ module Game {
 		if (gameOn)
 			setTimeout(gameLoop, 1000);
 		else
-			displayVictor(_instance.team1Alive, _instance.team2Alive);
+			UI.displayVictor(_instance.team1Alive, _instance.team2Alive);
 	}
 
 

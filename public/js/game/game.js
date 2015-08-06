@@ -69,7 +69,7 @@ var Game;
         this.team2Alive = true;
         this.gameLoop = gameLoop;
         //basicMap and characters are hardcoded data
-        initGameUI(basicMap, characters);
+        UI.initGameUI(basicMap, characters);
     }
     /**
      * This is the function that is called each time for the game loop
@@ -95,7 +95,7 @@ var Game;
         if (gameOn)
             setTimeout(gameLoop, 1000);
         else
-            displayVictor(_instance.team1Alive, _instance.team2Alive);
+            UI.displayVictor(_instance.team1Alive, _instance.team2Alive);
     }
     /**
      * Decides if the game is still going
