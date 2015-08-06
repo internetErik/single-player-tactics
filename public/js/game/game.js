@@ -1,7 +1,9 @@
 /// <reference path="../../tsd/typings/tsd.d.ts" />
 /// <reference path="data/maps/map.ts" />
 /// <reference path="data/characters/characters.ts" />
-/// <reference path="helpers/helpers.ts" />
+/// <reference path="helpers/domHelp.ts" />
+/// <reference path="helpers/entityHelp.ts" />
+/// <reference path="helpers/gameHelp.ts" />
 /// <reference path="ui/ui.ts" />
 /**
  * This represents the character that is currently active
@@ -84,7 +86,7 @@ var Game;
         //this loop runs until we assign something to the
         //character/event with the current turn
         while (!currentTurn)
-            currentTurn = advanceTime(characters);
+            currentTurn = EntityHelp.advanceTime(characters);
         if (currentTurn)
             gameOn = isGameOn(characters);
         //Put current characters name over the menu
@@ -93,7 +95,7 @@ var Game;
         if (gameOn)
             setTimeout(gameLoop, 1000);
         else
-            displayVictor(team1Alive, team2Alive);
+            displayVictor(_instance.team1Alive, _instance.team2Alive);
     }
     /**
      * Decides if the game is still going

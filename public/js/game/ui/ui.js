@@ -1,3 +1,6 @@
+/// <reference path="../helpers/domHelp.ts" />
+/// <reference path="../helpers/entityHelp.ts" />
+/// <reference path="../helpers/gameHelp.ts" />
 /**
  * Represents the map
  * @type {jQuery}
@@ -99,7 +102,7 @@ function positionCharacterInDom(c) {
     // 	1) gets the row we are in, then 
     // 	2) finds the cell in that row, then 
     // 	3) makes that a jquery object
-    var $cell = getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y), insert = ''; //this is the html we will insert
+    var $cell = DomHelp.getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y), insert = ''; //this is the html we will insert
     insert = '<span class="character" id="' + c._id + '"">';
     insert += c.stats.name;
     insert += '</span>';
@@ -119,10 +122,10 @@ function clearCharacterInDom(c) {
  * @param {Character} patient the target
  */
 function showEffectStats(agent, patient) {
-    var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = calculateHealthChange({}, agent, patient), pHealth, pNewHealth;
+    var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = EntityHelp.calculateHealthChange({}, agent, patient), pHealth, pNewHealth;
     if (patient) {
         pHealth = patient.stats.state.hp;
-        pNewHealth = calculateRemainingHp({}, agent, patient);
+        pNewHealth = EntityHelp.calculateRemainingHp({}, agent, patient);
         $agentName.text(agent.stats.name);
         $patientName.text(patient.stats.name);
         $pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
@@ -199,16 +202,16 @@ function move() {
     //we only do something if there is a character with a turn
     if (currentTurn) {
         var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), $cell;
-        $cell = getMapCell($rows, x, y);
+        $cell = DomHelp.getMapCell($rows, x, y);
         //selected position may fail
-        if (moveableMapCell($cell)) {
+        if (GameHelp.moveableMapCell($cell)) {
             currentTurn.stats.state.position.x = x;
             currentTurn.stats.state.position.y = y;
             clearCharacterInDom(currentTurn);
             positionCharacterInDom(currentTurn);
             clearMoveGrid();
             moved = true;
-            if (turnOver())
+            if (GameHelp.turnOver())
                 clearCurrentTurn();
         }
     }
@@ -221,9 +224,9 @@ function attack() {
     if (currentTurn) {
         var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), $cell, patientId, patient; //will be the target of action 
         //get effected cell
-        $cell = getMapCell($rows, x, y);
+        $cell = DomHelp.getMapCell($rows, x, y);
         //selected position may fail
-        if (attackableMapCell($cell)) {
+        if (GameHelp.attackableMapCell($cell)) {
             //get target character
             //ToDo: must support multiple
             patientId = $cell.children('.character').attr('id');
@@ -239,7 +242,7 @@ function attack() {
                 performAction(currentTurn, patient);
                 clearAttackGrid();
                 acted = true;
-                if (turnOver())
+                if (GameHelp.turnOver())
                     clearCurrentTurn();
             }
             clearEffectStats();
@@ -257,7 +260,7 @@ function attack() {
  */
 function performAction(agent, patient) {
     if (patient)
-        patient.stats.state.hp = calculateRemainingHp({}, agent, patient);
+        patient.stats.state.hp = EntityHelp.calculateRemainingHp({}, agent, patient);
 }
 /**
  * clear the different map-cell effect classes
