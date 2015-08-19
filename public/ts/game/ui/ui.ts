@@ -46,10 +46,27 @@ module UI {
 	}
 
 	/**
+	 * Display the victory message
+	 */
+	export function displayVictor(team1Alive, team2Alive) {
+		if (team1Alive && ! team2Alive)
+			$('#victory-message h1').text('Team 1 Wins!');
+		else if(team2Alive && ! team1Alive)
+			$('#victory-message h1').text('Team 2 Wins!');
+	}
+
+	/**
 	 * Loads map into global variable $map
 	 */
 	function cacheMap() {
 		$map = $('#map');
+	}
+
+	/**
+	 * loads each row of the map into global variable $rows
+	 */
+	function cacheRows() {
+		$rows = $('#map .map-row');
 	}
 
 	/**
@@ -69,13 +86,6 @@ module UI {
 			row += '</div>';
 			$(row).appendTo($map);
 		}
-	}
-
-	/**
-	 * loads each row of the map into global variable $rows
-	 */
-	function cacheRows() {
-		$rows = $('#map .map-row');
 	}
 
 	/**
@@ -100,16 +110,6 @@ module UI {
 		$('#action-menu [data-action=move]').click(moveAction);
 		$('#action-menu [data-action=attack]').click(attackAction);
 		$('#action-menu [data-action=skip]').click(skipAction);
-	}
-
-	/**
-	 * Display the victory message
-	 */
-	export function displayVictor(team1Alive, team2Alive) {
-		if (team1Alive && ! team2Alive)
-			$('#victory-message h1').text('Team 1 Wins!');
-		else if(team2Alive && ! team1Alive)
-			$('#victory-message h1').text('Team 2 Wins!');
 	}
 
 	/**

@@ -38,10 +38,26 @@ var UI;
     }
     UI.initGameUI = initGameUI;
     /**
+     * Display the victory message
+     */
+    function displayVictor(team1Alive, team2Alive) {
+        if (team1Alive && !team2Alive)
+            $('#victory-message h1').text('Team 1 Wins!');
+        else if (team2Alive && !team1Alive)
+            $('#victory-message h1').text('Team 2 Wins!');
+    }
+    UI.displayVictor = displayVictor;
+    /**
      * Loads map into global variable $map
      */
     function cacheMap() {
         $map = $('#map');
+    }
+    /**
+     * loads each row of the map into global variable $rows
+     */
+    function cacheRows() {
+        $rows = $('#map .map-row');
     }
     /**
      * This function loads the map into the DOM
@@ -56,12 +72,6 @@ var UI;
             row += '</div>';
             $(row).appendTo($map);
         }
-    }
-    /**
-     * loads each row of the map into global variable $rows
-     */
-    function cacheRows() {
-        $rows = $('#map .map-row');
     }
     /**
      * Bind the map cells to actions
@@ -84,16 +94,6 @@ var UI;
         $('#action-menu [data-action=attack]').click(attackAction);
         $('#action-menu [data-action=skip]').click(skipAction);
     }
-    /**
-     * Display the victory message
-     */
-    function displayVictor(team1Alive, team2Alive) {
-        if (team1Alive && !team2Alive)
-            $('#victory-message h1').text('Team 1 Wins!');
-        else if (team2Alive && !team1Alive)
-            $('#victory-message h1').text('Team 2 Wins!');
-    }
-    UI.displayVictor = displayVictor;
     /**
      * This function loads on character into the DOM. It is called by
      * loadCharactersInDom()
