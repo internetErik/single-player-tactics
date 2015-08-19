@@ -1,4 +1,6 @@
 node_modules
 
-#this file is built by gulp
-public/js 
+#these are built by gulp
+public/js/**/*.js
+public/styles/blitz.css
+public/styles/site.css
