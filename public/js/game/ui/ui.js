@@ -64,10 +64,10 @@ var UI;
      */
     function loadMapInDOM(map) {
         //currently using dummy data for map
-        var i = 0, j = 0, row = ''; //string used in appendTo()
-        for (i = 0; i <= map.size.width; i += 1) {
+        var i, j, row = ''; //string used in appendTo()
+        for (i = 0; i <= map.size.y; i += 1) {
             row = '<div class="map-row">';
-            for (j = 0; j < map.size.height; j += 1)
+            for (j = 0; j <= map.size.x; j += 1)
                 row += '<div class="map-cell" data-x="' + j + '" data-y="' + i + '"></div>';
             row += '</div>';
             $(row).appendTo($map);
