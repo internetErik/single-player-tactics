@@ -57,7 +57,9 @@ var UI;
      * loads each row of the map into global variable $rows
      */
     function cacheRows() {
+        //$rows is a global
         $rows = $('#map .map-row');
+        $rows = $rows.filter(function (row) { return $(row).children('.map-cell').length > 0; });
     }
     /**
      * This function loads the map into the DOM

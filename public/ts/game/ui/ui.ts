@@ -66,7 +66,9 @@ module UI {
 	 * loads each row of the map into global variable $rows
 	 */
 	function cacheRows() {
+		//$rows is a global
 		$rows = $('#map .map-row');
+		$rows = $rows.filter(row => $(row).children('.map-cell').length > 0);
 	}
 
 	/**
