@@ -73,24 +73,61 @@ module UI {
 	 * This function loads the map into the DOM
 	 */
 	function loadMapInDOM(map) {
+		var i, j, k,
+			level = '', //string used to append a level
+			$level, //the current level we are inserting to
+			row = ''; //string used to append a row to a level
 
-		//currently using dummy data for map
-		var i, j,
-			row = ''; //string used in appendTo()
+		for (k = 0; k <= map.size.z; k += 1) {
+			level = '<div class="map-level" data-z="'+k+'"></div>';
+			//insert a new level
+			$(level).appendTo($map);
+			//cache level
+			$level = $('.map-level[data-z=' + k + ']');
+			
+			//if this level is empty generate just air
+			if (map['z' + k].length === 0) {
 
-		for(i = 0; i <= map.size.y; i += 1) {
-			row = '<div class="map-row">';	
-			for(j = 0; j <= map.size.x; j += 1)
-				row += '<div class="map-cell" data-x="'+j+'" data-y="'+i+'"></div>';
-			row += '</div>';
-			$(row).appendTo($map);
+				row = '<div class="map-row">';
+
+				for (i = 0; i <= map.size.y; i += 1)
+					for (j = 0; j <= map.size.x; j += 1)
+						row += '<div class="map-air" data-x="' + j + '" data-y="' + i + '"></div>';
+
+				row += '</div>';
+			}
+			else
+				$(generateLevel(map['z' + k])).appendTo($level);
 		}
+	}
+
+	
+	/**
+	 * Given that this level isn't empty, create the html for it
+	 * 
+	 * @param  {Array<any>} rows the rows in the level to be generated
+	 * @return {string}          the resulting html to be appended to DOM
+	 */
+	function generateLevel(rows: Array<any>): string {
+		var innerLevel = '';
+
+		rows.forEach(function(row, i) { 
+			innerLevel += '<div class="map-row">';
+			innerLevel += row.reduce(function(p,c, j){
+				return (c._id) ?
+					p + '<div class="map-cell" data-x="' + j + '" data-y="' + i + '"></div>'
+				:   p + '<div class="map-air" data-x="' + j + '" data-y="' + i + '"></div>';			
+			}, '');
+			innerLevel += '</div>';
+		});
+
+		return innerLevel;
 	}
 
 	/**
 	 * Bind the map cells to actions
 	 */
-	function bindCells() {
+	function bindCells(): void {
 		$('#map .map-cell').click(cellInteraction);
 	}
 
