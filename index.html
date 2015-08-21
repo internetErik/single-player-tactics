@@ -45,9 +45,13 @@
 			height: 75px;
 			width: 75px;
 			border: 1px solid black;
-			background-color: gray;
+			background-color: #888;
 			color: white;
 			font-size: 18px;
+		}
+
+		.map-cell:hover {
+			background-color: rgba(106,106,106, .5);
 		}
 
 		.map-cell_moveable,
@@ -104,6 +108,12 @@
 			<h2>Patient: <span class="patient-name"></span></h2>
 			<div class="patient-health-change"></div>
 		</div>
+	</section>
+
+	<section id="view-controls" class="view-controls">
+		<button data-action="turn">turn clockwise</button>
+		<button>turn counter clockwise</button>
+		<button>tilt</button>
 	</section>
 
 </body>

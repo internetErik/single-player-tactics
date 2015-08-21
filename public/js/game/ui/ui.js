@@ -34,6 +34,8 @@ var UI;
             loadCharactersInDOM(characters);
             //bind click events on menu 
             bindMenu();
+            //bind ui view menu
+            bindViewMenu();
         });
     }
     UI.initGameUI = initGameUI;
@@ -116,6 +118,13 @@ var UI;
         $('#action-menu [data-action=move]').click(moveAction);
         $('#action-menu [data-action=attack]').click(attackAction);
         $('#action-menu [data-action=skip]').click(skipAction);
+    }
+    /**
+     * Bind the buttons for the ui view options such as turn
+     * and tilt
+     */
+    function bindViewMenu() {
+        // $('#view-controls [data-action=turn]').click(turnUiAction);
     }
     /**
      * This function loads on character into the DOM. It is called by
