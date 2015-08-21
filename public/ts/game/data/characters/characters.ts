@@ -67,7 +67,7 @@ var characters = [
 				position: {
 					x: 5,
 					y: 0,
-					z: 0,
+					z: 2,
 					d: 'n' //the direction being faced
 				},
 				//this charges up to 100 by speed, then you get a turn
@@ -190,7 +190,7 @@ var characters = [
 				
 				//current position in the field
 				position: {
-					x: 4,
+					x: 0,
 					y: 0,
 					z: 0,
 					d: 'n' //the direction being faced
@@ -317,7 +317,7 @@ var characters = [
 				position: {
 					x: 5,
 					y: 9,
-					z: 0,
+					z: 2,
 					d: 'n' //enum? the direction being faced
 				},
 				//this charges up to 100 by speed, then you get a turn
@@ -442,7 +442,7 @@ var characters = [
 				position: {
 					x: 4,
 					y: 9,
-					z: 0,
+					z: 2,
 					d: 'n' //enum? the direction being faced
 				},
 				//this charges up to 100 by speed, then you get a turn

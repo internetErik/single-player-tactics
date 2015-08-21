@@ -68,7 +68,7 @@ module UI {
 	function cacheRows() {
 		//$rows is a global
 		$rows = $('#map .map-row');
-		$rows = $rows.filter(row => $(row).children('.map-cell').length > 0);
+		// $rows = $rows.filter(row => $(row).children('.map-cell').length > 0);
 	}
 
 	/**
@@ -81,7 +81,7 @@ module UI {
 			row = ''; //string used to append a row to a level
 
 		for (k = 0; k <= map.size.z; k += 1) {
-			level = '<div class="map-level" data-z="'+k+'"></div>';
+			level = '<div class="map-level" data-z="' + k + '"></div>';
 			//insert a new level
 			$(level).appendTo($map);
 			//cache level
@@ -94,12 +94,12 @@ module UI {
 
 				for (i = 0; i <= map.size.y; i += 1)
 					for (j = 0; j <= map.size.x; j += 1)
-						row += '<div class="map-air" data-x="' + j + '" data-y="' + i + '"></div>';
+						row += '<div class="map-air" data-x="' + j + '" data-y="' + i + '" data-z="' + k + '"></div>';
 
 				row += '</div>';
 			}
 			else
-				$(generateLevel(map['z' + k])).appendTo($level);
+				$(generateLevel(map['z' + k], k)).appendTo($level);
 		}
 	}
 
@@ -108,17 +108,18 @@ module UI {
 	 * Given that this level isn't empty, create the html for it
 	 * 
 	 * @param  {Array<any>} rows the rows in the level to be generated
+	 * @param  {number} level the number of the level we are on
 	 * @return {string}          the resulting html to be appended to DOM
 	 */
-	function generateLevel(rows: Array<any>): string {
+	function generateLevel(rows: Array<any>, level: number): string {
 		var innerLevel = '';
 
 		rows.forEach(function(row, i) { 
-			innerLevel += '<div class="map-row">';
+			innerLevel += '<div class="map-row" data-y="' + i + '" data-z="' + level + '">';
 			innerLevel += row.reduce(function(p,c, j){
 				return (c._id) ?
-					p + '<div class="map-cell" data-x="' + j + '" data-y="' + i + '"></div>'
-				:   p + '<div class="map-air" data-x="' + j + '" data-y="' + i + '"></div>';			
+					p + '<div class="map-cell" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>'
+				:   p + '<div class="map-air" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>';			
 			}, '');
 			innerLevel += '</div>';
 		});
@@ -162,7 +163,7 @@ module UI {
 	 	// 	1) gets the row we are in, then 
 		// 	2) finds the cell in that row, then 
 		// 	3) makes that a jquery object
-		var $cell = DomHelp.getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y),
+		var $cell = DomHelp.getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y, c.stats.state.position.z),
 			insert = ''; //this is the html we will insert
 
 		insert = '<span class="character" id="' + c._id + '"">';
@@ -288,14 +289,16 @@ module UI {
 		if(currentTurn) {
 			var x = this.getAttribute('data-x'),
 				y = this.getAttribute('data-y'),
+				z = this.getAttribute('data-z'),
 				$cell;
 
-			$cell = DomHelp.getMapCell($rows, x, y);
+			$cell = DomHelp.getMapCell($rows, x, y, z);
 			
 			//selected position may fail
 			if(DomHelp.moveableMapCell($cell)) {
 				currentTurn.stats.state.position.x = x;
 				currentTurn.stats.state.position.y = y;
+				currentTurn.stats.state.position.z = z;
 				clearCharacterInDom(currentTurn);
 				positionCharacterInDom(currentTurn);
 				clearMoveGrid();
@@ -315,12 +318,13 @@ module UI {
 		if(currentTurn) {
 			var x = this.getAttribute('data-x'),
 				y = this.getAttribute('data-y'),
+				z = this.getAttribute('data-z'),
 				$cell,
 				patientId,
 				patient; //will be the target of action 
 			
 			//get effected cell
-			$cell = DomHelp.getMapCell($rows, x, y);
+			$cell = DomHelp.getMapCell($rows, x, y, z);
 
 			//selected position may fail
 			if(DomHelp.attackableMapCell($cell)) {
@@ -332,19 +336,24 @@ module UI {
 					if (p) return p;
 					if (c._id === patientId) return c;
 				}, null);
-				
-				showEffectStats(currentTurn, patient);
-				if (confirm("Are you sure you want to attack?")) {
-					//apply effects - damage for now
-					performAction(currentTurn, patient);
-					clearAttackGrid();
-					acted = true;
 
-					if(GameHelp.turnOver())
-						clearCurrentTurn();
+				if (patient) {
+
+					showEffectStats(currentTurn, patient);
+					if (confirm("Are you sure you want to attack?")) {
+						//apply effects - damage for now
+						performAction(currentTurn, patient);
+						clearAttackGrid();
+						acted = true;
+
+						if (GameHelp.turnOver())
+							clearCurrentTurn();
+					}
+
+					clearEffectStats();
 				}
-				
-				clearEffectStats();
+				else
+					console.warn("Attacked cell with no characters in it.");
 			}
 		}
 	}

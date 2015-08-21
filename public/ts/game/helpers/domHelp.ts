@@ -3,11 +3,17 @@ module DomHelp {
 	/**
 	 * given an x and y position, get the cell on the map
 	 * 
+	 * @param {number} $rows the cache of rows to look in
 	 * @param {number} x coordinate
 	 * @param {number} y coordinate
+	 * @param {number} z coordinate
 	 */
-	export function getMapCell($rows, x:number, y:number) {
-		return $( $( $rows[y] ).children('.map-cell')[x] );
+	export function getMapCell($rows, x: number, y: number, z: number) {
+		var $row = $rows.filter('[data-y=' + y + '][data-z=' + z + ']');
+		if ($row.length > 0)
+			return $($row.children('.map-cell')[x]);
+		else
+			console.error("tried to look up spot on map that doesn't exist.");
 	}
 
 	/**
