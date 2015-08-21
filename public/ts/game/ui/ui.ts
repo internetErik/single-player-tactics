@@ -75,31 +75,15 @@ module UI {
 	 * This function loads the map into the DOM
 	 */
 	function loadMapInDOM(map) {
-		var i, j, k,
-			level = '', //string used to append a level
-			$level, //the current level we are inserting to
-			row = ''; //string used to append a row to a level
-
-		for (k = 0; k <= map.size.z; k += 1) {
-			level = '<div class="map-level" data-z="' + k + '"></div>';
-			//insert a new level
-			$(level).appendTo($map);
-			//cache level
-			$level = $('.map-level[data-z=' + k + ']');
+		var k;
 			
-			//if this level is empty generate just air
-			if (map['z' + k].length === 0) {
-
-				row = '<div class="map-row">';
-
-				for (i = 0; i <= map.size.y; i += 1)
-					for (j = 0; j <= map.size.x; j += 1)
-						row += '<div class="map-air" data-x="' + j + '" data-y="' + i + '" data-z="' + k + '"></div>';
-
-				row += '</div>';
-			}
-			else
-				$(generateLevel(map['z' + k], k)).appendTo($level);
+		for (k = 0; k <= map.size.z; k += 1) {
+			//insert a new level
+			$('<div class="map-level" data-z="' + k + '"></div>').appendTo($map);
+			
+			//if this level is not empty generate generate it
+			if (map['z' + k].length > 0)
+				$(generateLevel(map['z' + k], k)).appendTo('.map-level[data-z=' + k + ']');
 		}
 	}
 
@@ -112,16 +96,19 @@ module UI {
 	 * @return {string}          the resulting html to be appended to DOM
 	 */
 	function generateLevel(rows: Array<any>, level: number): string {
-		var innerLevel = '';
+		var innerLevel = '',
+			sideWidth = 75; //the width/height of these squares
 
-		rows.forEach(function(row, i) { 
-			innerLevel += '<div class="map-row" data-y="' + i + '" data-z="' + level + '">';
-			innerLevel += row.reduce(function(p,c, j){
-				return (c._id) ?
-					p + '<div class="map-cell" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>'
-				:   p + '<div class="map-air" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>';			
-			}, '');
-			innerLevel += '</div>';
+		rows.forEach(function(row, i) {
+			if (row.length > 0) {
+				innerLevel += '<div class="map-row" data-y="' + i + '" data-z="' + level + '">';
+				innerLevel += row.reduce(function(p, c, j) {
+					return (c._id) ?
+						p + '<div class="map-cell" style="top:' + sideWidth * i + 'px; left:' + sideWidth * j + 'px;" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>'
+						: p;
+				}, '');
+				innerLevel += "</div>";
+			}
 		});
 
 		return innerLevel;
