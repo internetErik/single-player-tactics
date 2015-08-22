@@ -11,7 +11,7 @@ module DomHelp {
 	export function getMapCell($rows, x: number, y: number, z: number) {
 		var $row = $rows.filter('[data-y=' + y + '][data-z=' + z + ']');
 		if ($row.length > 0)
-			return $($row.children('.map-cell')[x]);
+			return $($row.children('.map-cell[data-x=' + x + ']'));
 		else
 			console.error("tried to look up spot on map that doesn't exist.");
 	}
