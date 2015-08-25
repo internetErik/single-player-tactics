@@ -4789,3 +4789,53 @@ input {
 :-ms-input-placeholder {
   /* Internet Explorer 10+ */
   color: white; }
+
+.map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  font-size: 0;
+  -webkit-transform: translate(-40%, -35%) rotateX(40deg) rotateY(-20deg) rotateZ(25deg);
+          transform: translate(-40%, -35%) rotateX(40deg) rotateY(-20deg) rotateZ(25deg); }
+
+.map-level {
+  position: absolute;
+  top: 0;
+  left: 0; }
+  .map-level + .map-level {
+    -webkit-transform: translate(-5px, -5px);
+        -ms-transform: translate(-5px, -5px);
+            transform: translate(-5px, -5px); }
+  .map-level + .map-level + .map-level {
+    -webkit-transform: translate(-10px, -10px);
+        -ms-transform: translate(-10px, -10px);
+            transform: translate(-10px, -10px); }
+
+.map-row {
+  overflow: hidden; }
+
+.map-cell {
+  position: absolute;
+  height: 75px;
+  width: 75px;
+  border: 1px solid black;
+  background-color: #888;
+  color: white;
+  font-size: 18px; }
+  .map-cell:hover {
+    background-color: rgba(106, 106, 106, 0.5); }
+  .map-cell.map-cell_moveable,
+  .map-cell.map-cell_attackable {
+    cursor: pointer; }
+  .map-cell.map-cell_moveable {
+    background-color: blue; }
+  .map-cell.map-cell_attackable {
+    background-color: red; }
+
+.character {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  line-height: 75px; }

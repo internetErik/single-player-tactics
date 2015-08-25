@@ -26,6 +26,11 @@
 		// components are either reused or have special functionality
 		// that makes sense to keep clearly by itself
 //@import "components/...";
+@import "components/map";
+@import "components/map-level";
+@import "components/map-row";
+@import "components/map-cell";
+@import "components/character";
 
 //partial scss
 	// Partials just represent a part of a page

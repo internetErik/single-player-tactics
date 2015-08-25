@@ -161,7 +161,7 @@ module UI {
 	/**
 	 * This function loads on character into the DOM. It is called by
 	 * loadCharactersInDom()
-
+	 * 
 	 * The character placed in the DOM is given an #id === to the character's _id
 	 * @param      {Character}  c       This represents a single character
 	 */

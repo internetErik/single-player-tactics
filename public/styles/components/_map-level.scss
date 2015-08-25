@@ -1,0 +1,13 @@
+.map-level {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	& + .map-level {
+		transform: translate(-5px, -5px);
+	}
+
+	& + .map-level + .map-level {
+		transform: translate(-10px, -10px);
+	}
+}

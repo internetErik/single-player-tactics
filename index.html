@@ -5,78 +5,8 @@
 	<title>Tactics Online</title>
 	<link rel="stylesheet" href="public/styles/blitz.css">
 	<link rel="stylesheet" href="public/styles/site.css">
-	<style>
-		*, *:before, *:after {
-			box-sizing: border-box;
-		}
-
-		#map {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-		    top: 50%;
-		    left: 50%;
-		    font-size: 0;
-			transform: 
-				translate(-40%,-35%) 
-				rotateX(40deg) rotateY(-20deg) rotateZ(25deg);
-		}
-
-		.map-level {
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-
-		.map-level + .map-level {
-			transform: translate(-5px, -5px);
-		}
-
-		.map-level + .map-level + .map-level {
-			transform: translate(-10px, -10px);
-		}
-
-		.map-row {
-			overflow: hidden;
-		}
-		
-		.map-cell{
-			position: absolute;
-			height: 75px;
-			width: 75px;
-			border: 1px solid black;
-			background-color: #888;
-			color: white;
-			font-size: 18px;
-		}
-
-		.map-cell:hover {
-			background-color: rgba(106,106,106, .5);
-		}
-
-		.map-cell_moveable,
-		.map-cell_attackable {
-			cursor: pointer;
-		}
-
-		.map-cell_moveable {
-			background-color: blue;
-		}
-
-		.map-cell_attackable {
-			background-color: red;
-		}
-
-		.character {
-			text-align: center;
-		    display: inline-block;
-		    width: 100%;
-		    line-height: 75px;
-		}
-	</style>
 </head>
 <body>
-
 	<section id="victory-message" class="victory-message">
 		<h1 class="heading5">Game On</h1>
 	</section>
@@ -110,7 +40,7 @@
 		</div>
 	</section>
 
-	<section id="view-controls" class="view-controls">
+	<section id="view-controls" class="view-controls posa b0 l0">
 		<button data-action="turn">turn clockwise</button>
 		<button>turn counter clockwise</button>
 		<button>tilt</button>
