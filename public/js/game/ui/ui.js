@@ -115,16 +115,16 @@ var UI;
      * Bind the various menu options to generic functions
      */
     function bindMenu() {
-        $('#action-menu [data-action=move]').click(moveAction);
-        $('#action-menu [data-action=attack]').click(attackAction);
-        $('#action-menu [data-action=skip]').click(skipAction);
+        $('#action-menu [data-action=move]').click(turnModeMove);
+        $('#action-menu [data-action=attack]').click(turnModeAttack);
+        $('#action-menu [data-action=skip]').click(skipTurn);
         $(window).on('keyup', function (e) {
             if (e.keyCode === 77)
-                moveAction();
+                turnModeMove();
             else if (e.keyCode === 65)
-                attackAction();
+                turnModeAttack();
             else if (e.keyCode === 83)
-                skipAction();
+                skipTurn();
         });
     }
     /**
@@ -314,7 +314,7 @@ var UI;
     /**
      * clear the different map-cell effect classes
      */
-    function cancelAction() {
+    function defaultMapState() {
         clearMoveGrid();
         clearAttackGrid();
     }
@@ -323,7 +323,7 @@ var UI;
      * for the character
      */
     function clearCurrentTurn() {
-        cancelAction();
+        defaultMapState();
         currentTurn.stats.state.turn = 0;
         currentTurn = null;
         moved = false;
@@ -332,17 +332,20 @@ var UI;
         $('.active-character').text('');
     }
     /**
-     * Simply clears the current turn
+     * the function triggered by clicking 'skip turn' button in the menu
+     * or pressing 's' when a player has a turn
+     * skips a turn
      */
-    function skipAction() {
-        if (confirm("Skip your turn?") && currentTurn) {
+    function skipTurn() {
+        if (currentTurn && confirm("Skip your turn?")) {
             clearCurrentTurn();
         }
     }
     /**
      * The function triggered by clicking the 'move' button in the menu
+     * or pressing 'm' when a player has a turn
      */
-    function moveAction() {
+    function turnModeMove() {
         //we only do something if there is a character with a turn
         if (currentTurn && !moved) {
             showMoveGrid(currentTurn);
@@ -351,8 +354,9 @@ var UI;
     }
     /**
      * This function is used to show the attack area, and make it selectable
+     * or pressing 'a' when a player has a turn
      */
-    function attackAction() {
+    function turnModeAttack() {
         if (currentTurn && !acted) {
             showAttackGrid(currentTurn);
             turnMode = 'attack';
