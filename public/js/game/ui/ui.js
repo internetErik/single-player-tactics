@@ -118,6 +118,15 @@ var UI;
         $('#action-menu [data-action=move]').click(moveAction);
         $('#action-menu [data-action=attack]').click(attackAction);
         $('#action-menu [data-action=skip]').click(skipAction);
+        $(window).on('keyup', function (e) {
+            console.log(e);
+            if (e.keyCode === 77)
+                moveAction();
+            else if (e.keyCode === 65)
+                attackAction();
+            else if (e.keyCode === 83)
+                skipAction();
+        });
     }
     /**
      * Bind the buttons for the ui view options such as turn
