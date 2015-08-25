@@ -119,7 +119,6 @@ var UI;
         $('#action-menu [data-action=attack]').click(attackAction);
         $('#action-menu [data-action=skip]').click(skipAction);
         $(window).on('keyup', function (e) {
-            console.log(e);
             if (e.keyCode === 77)
                 moveAction();
             else if (e.keyCode === 65)

@@ -141,7 +141,6 @@ module UI {
 		$('#action-menu [data-action=skip]').click(skipAction);
 
 		$(window).on('keyup', function(e){
-			console.log(e);
 			if (e.keyCode === 77) //'m' = move
 				moveAction();
 			else if (e.keyCode === 65)//'a' = attack
