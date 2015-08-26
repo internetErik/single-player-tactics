@@ -6,11 +6,18 @@ module EntityHelp {
 	 */
 	export function advanceTime(characters) {
 		var currentTurn;
-
-		characters.forEach(function(c) {
-			c.stats.state.turn += c.stats.state.speed;
-			if (c.stats.state.hp > 0 && c.stats.state.turn >= 100)
-				currentTurn = c;
+		//ToDo: I need a more sophisticated way of determining who is next
+		//	since now the last person who meets this criteria comes up next
+		//ToDo: I need to plan out a list of upcoming turns and simply
+		//	reorder that based on new events added to queue 
+			
+		//iterate through all characters and if any are
+		//1) alive, and 2) at 100 turn state set them as next
+		characters.forEach(function(character) {
+			character.stats.state.turn += character.stats.state.speed;
+			if (character.stats.state.hp > 0 && 
+				character.stats.state.turn >= 100)
+				currentTurn = character;
 		});
 
 		return currentTurn;

@@ -4825,7 +4825,7 @@ input {
   color: white;
   font-size: 18px; }
   .map-cell:hover {
-    background-color: rgba(106, 106, 106, 0.5); }
+    background-color: #aaa; }
   .map-cell.map-cell_moveable,
   .map-cell.map-cell_attackable {
     cursor: pointer; }

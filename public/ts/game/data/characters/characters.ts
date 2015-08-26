@@ -127,6 +127,7 @@ var characters = [
 			accessory: {}
 		},
 		actions: {
+			//This should show in the action menu
 			primary: 'Basic Skills',
 			secondary: null,
 			reaction: null,

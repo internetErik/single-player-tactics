@@ -32,7 +32,7 @@ var UI;
             bindCells();
             //position characters initially
             loadCharactersInDOM(characters);
-            //bind click events on menu 
+            //bind click and keyboard events on menu 
             bindMenu();
             //bind ui view menu
             bindViewMenu();
@@ -61,7 +61,6 @@ var UI;
     function cacheRows() {
         //$rows is a global
         $rows = $('#map .map-row');
-        // $rows = $rows.filter(row => $(row).children('.map-cell').length > 0);
     }
     /**
      * This function loads the map into the DOM
@@ -117,14 +116,14 @@ var UI;
     function bindMenu() {
         $('#action-menu [data-action=move]').click(turnModeMove);
         $('#action-menu [data-action=attack]').click(turnModeAttack);
-        $('#action-menu [data-action=skip]').click(skipTurn);
+        $('#action-menu [data-action=wait]').click(characterWait);
         $(window).on('keyup', function (e) {
             if (e.keyCode === 77)
                 turnModeMove();
             else if (e.keyCode === 65)
                 turnModeAttack();
-            else if (e.keyCode === 83)
-                skipTurn();
+            else if (e.keyCode === 87)
+                characterWait();
         });
     }
     /**
@@ -321,10 +320,13 @@ var UI;
     /**
      * This sets the current turn to empty, and resets the turn counter
      * for the character
+     *
+     * @param {number} turnCharge the value to set the character's turn to
      */
-    function clearCurrentTurn() {
+    function clearCurrentTurn(turnCharge) {
+        if (turnCharge === void 0) { turnCharge = 0; }
         defaultMapState();
-        currentTurn.stats.state.turn = 0;
+        currentTurn.stats.state.turn = turnCharge;
         currentTurn = null;
         moved = false;
         acted = false;
@@ -332,13 +334,13 @@ var UI;
         $('.active-character').text('');
     }
     /**
-     * the function triggered by clicking 'skip turn' button in the menu
-     * or pressing 's' when a player has a turn
-     * skips a turn
+     * the function triggered by clicking 'Wait' button in the menu
+     * or pressing 'w' when a player has a turn
+     * has character miss turn, but regain some turn charge
      */
-    function skipTurn() {
-        if (currentTurn && confirm("Skip your turn?")) {
-            clearCurrentTurn();
+    function characterWait() {
+        if (currentTurn && confirm("Wait and pass on your turn?")) {
+            clearCurrentTurn(50); //pass in a value to set character turn to
         }
     }
     /**

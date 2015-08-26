@@ -9,6 +9,8 @@ var GameHelp;
      */
     function turnOver() {
         //should this be on the Turn class? should there be a Turn class?
+        //moved and acted are global variables in game.ts
+        //	I don't like this
         return (moved && acted);
     }
     GameHelp.turnOver = turnOver;
