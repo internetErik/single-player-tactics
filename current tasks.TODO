@@ -1,0 +1,22 @@
+
+ Items not in order of priority
+ 
+ ☐ More elaborate selection of turns
+ 
+ ☐ Secondary menu for attack that will house job skills and selected secondary skills
+   ☐ ? How will program state be managed.  Will the same approach work?
+
+ ☐ Algorithm for determining area of affect (for movement, and attack)
+   ☐ Upgrade to consider height
+   ☐ Upgrade to consider a type of attack/movement
+ 
+ 
+ Aesthetics / UI
+ ☐ Method to show a character's current stats by clicking on them
+ ☐ Clean up UI
+ ☐ Map tiles should be different based on ground type
+
+
+RnD
+ ☐ Canvas representation of map in 3d so current map can merely show if it is moveable, etc
+ ☐ Canvas 2d characters

@@ -321,12 +321,14 @@ var UI;
      * This sets the current turn to empty, and resets the turn counter
      * for the character
      *
-     * @param {number} turnCharge the value to set the character's turn to
+     * @param {number} turnCharge the value to set the character's turn
+     *                              to if they haven't done anything.
      */
     function clearCurrentTurn(turnCharge) {
         if (turnCharge === void 0) { turnCharge = 0; }
         defaultMapState();
-        currentTurn.stats.state.turn = turnCharge;
+        currentTurn.stats.state.turn = (moved || acted) ?
+            0 : turnCharge;
         currentTurn = null;
         moved = false;
         acted = false;
