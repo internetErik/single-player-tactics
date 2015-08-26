@@ -1,7 +1,9 @@
 
  Items not in order of priority
- 
+
  ☐ More elaborate selection of turns
+   ☐ sort character by turn to find one highest over 100
+   ☐ more sophisticated selection between characters with the same turn value   
  
  ☐ Secondary menu for attack that will house job skills and selected secondary skills
    ☐ ? How will program state be managed.  Will the same approach work?

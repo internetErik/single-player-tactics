@@ -5,19 +5,32 @@ var EntityHelp;
      * If anyone gets turn >= 100, set currentTurn to them
      */
     function advanceTime(characters) {
-        var currentTurn;
-        //ToDo: I need a more sophisticated way of determining who is next
-        //	since now the last person who meets this criteria comes up next
+        var currentTurn, candidates;
         //ToDo: I need to plan out a list of upcoming turns and simply
         //	reorder that based on new events added to queue 
-        //iterate through all characters and if any are
-        //1) alive, and 2) at 100 turn state set them as next
+        //iterate through all characters and advance their turn
         characters.forEach(function (character) {
             character.stats.state.turn += character.stats.state.speed;
-            if (character.stats.state.hp > 0 &&
-                character.stats.state.turn >= 100)
-                currentTurn = character;
         });
+        //find characters that are at or over 100 and sort them by highest turn
+        candidates = characters.filter(function (character) {
+            return (character.stats.state.hp > 0 &&
+                character.stats.state.turn >= 100) ?
+                true : false;
+        }).sort(function (a, b) {
+            if (a.stats.state.turn > b.stats.state.turn)
+                return 1;
+            else if (a.stats.state.turn < b.stats.state.turn)
+                return -1;
+            return 0;
+        });
+        //if there are any candidates we will assign one of them to current turn
+        if (candidates.length > 0) {
+            //should find all characters with the same turn and select from them by 
+            // 1) speed, 2) level, 3) job level, 4) xp, 5) jp, 6) hp, 7) mp, 8) random num
+            // if(candidates.length > 1);
+            currentTurn = candidates[0];
+        }
         return currentTurn;
     }
     EntityHelp.advanceTime = advanceTime;
