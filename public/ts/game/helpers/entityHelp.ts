@@ -46,7 +46,7 @@ module EntityHelp {
 	 * @param {[type]} patient the target of action
 	 */
 	export function calculateHealthChange(effect, agent, patient): number {
-		return effect.damage(agent, patient);
+		return effect(agent, patient);
 	}
 
 	/**

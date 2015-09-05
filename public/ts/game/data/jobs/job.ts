@@ -21,7 +21,9 @@ var actions = [
 		_id: '85ca7d6b-76ff-408e-a10a-fb68b81c2004',
 		name: 'tackle',
 		jpRequired: 50,
-		effect: {}
+		effect: function(agent, patient) {
+			return 10;
+		}
 	}
 ];
 

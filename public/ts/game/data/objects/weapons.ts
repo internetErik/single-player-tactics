@@ -1,7 +1,7 @@
 function roll(dice: number, sides: number): number {
 	return (dice === 0 || sides === 0) ? 
 			0 : 
-			Array.apply(dice, Array(5))
+			Array.apply(dice, Array(dice))
 			.map(function() { 
 				return Math.ceil(Math.random() * sides);
 			})
@@ -18,11 +18,9 @@ var weapons = [
 	 	hands: 1,
 	 	name: 'Longsword',
 	 	itemType: 'sword',
-	 	effect: {
-		 	damageType: 'physical',
-		 	damage: function(agent, patient){
-		 		return -1*(agent.stats.state.pa + roll(1,10));
-		 	}
+		effectType: 'physical',
+	 	effect: function(agent, patient){
+	 		return -1*(agent.stats.state.pa + roll(1,10));
 	 	},
 	 	rangeType: 'line-of-sight',
 	 	range: {
@@ -34,21 +32,17 @@ var weapons = [
 	 },
 	 /////////////
 	 // Lance
-	 // if a there are two targets next to each other
-	 // and you select the farter one, then it only hits the
-	 // closer one
+	 // 
 	 /////////////
 	 {
 	 	_id: '9dc7d530-7f05-40c3-bcc9-aee3701c257e',
 	 	hands: 2,
 	 	name: 'Lance',
 	 	itemType: 'lance',
-		effect: {
-			damageType: 'physical',
-		 	damage: function(agent, patient){
-		 		return -1*(agent.stats.state.pa + roll(1,10));
-		 	}
-		},
+		effectType: 'physical',
+		effect: function(agent, patient){
+	 		return -1*(agent.stats.state.pa + roll(1,10));
+	 	},
 		rangeType: 'line-of-sight',
 		range: {
 		  min: 1,
@@ -65,11 +59,9 @@ var weapons = [
 		hands: 2,
 		name: 'Windslasher',
 		itemType: 'bow',
-		effect: {
-			damageType: 'physical',
-		 	damage: function(agent, patient){
+		effectType: 'physical',
+		effect: function(agent, patient){
 		 		return -1*(agent.stats.state.pa + roll(1,8));
-		 	}
 		},
 		rangeType: 'arc',
 		range: function(o, t) {
