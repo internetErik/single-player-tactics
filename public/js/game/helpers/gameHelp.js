@@ -14,4 +14,22 @@ var GameHelp;
         return (moved && acted);
     }
     GameHelp.turnOver = turnOver;
+    //psuedo code
+    function attackableSpace(agent, action, map) {
+        var x, y, z;
+        //for each position in the map check if it's a valid target
+    }
+    GameHelp.attackableSpace = attackableSpace;
+    function roll(dice, sides) {
+        return (dice === 0 || sides === 0) ?
+            0 :
+            Array.apply(dice, Array(dice))
+                .map(function () {
+                return Math.ceil(Math.random() * sides);
+            })
+                .reduce(function (p, c, n) {
+                return p + c;
+            }, 0);
+    }
+    GameHelp.roll = roll;
 })(GameHelp || (GameHelp = {}));

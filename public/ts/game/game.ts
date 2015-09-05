@@ -78,6 +78,15 @@ module Game {
 		this.team2Alive = true;
 		this.gameLoop = gameLoop;
 
+		//extend character objects with getters
+		// When characters are represented by a class we won't do this
+		characters.forEach(function(character){
+			character.getState = function(stat) {
+				return this.stats.state[stat];
+			};
+			character.equipment.rightHand = weapons[0];//longsword
+		});
+
 		//basicMap and characters are hardcoded data
 		UI.initGameUI(basicMap, characters);
 	}

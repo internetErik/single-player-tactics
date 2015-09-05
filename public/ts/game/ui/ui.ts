@@ -3,8 +3,7 @@
 /// <reference path="../helpers/gameHelp.ts" />
 
 module UI {
-	/**
-	 * Represents the map
+	/**	 * Represents the map
 	 * @type {jQuery}
 	 */
 	var $map;
@@ -190,22 +189,23 @@ module UI {
 	/**
 	 * This displays what will happen from an effect
 	 * 
+	 * @param {Object}    effect   What is happening
 	 * @param {Character} agent   The actor
 	 * @param {Character} patient the target
 	 */
-	function showEffectStats(agent, patient) {
+	function showEffectStats(effect, agent, patient) {
 		var $actionView = $('#action-effects-view'),
 			$agentName = $actionView.find('.agent-name'),
 			$aHealthChange = $actionView.find('.agent-health-change'),
 			$patientName = $actionView.find('.patient-name'),
 			$pHealthChange = $actionView.find('.patient-health-change'),
-			aDamage = EntityHelp.calculateHealthChange({}, agent, patient),
+			aDamage = EntityHelp.calculateHealthChange(effect, agent, patient),
 			pHealth,
 			pNewHealth;
 		
 		if (patient) {
 			pHealth = patient.stats.state.hp;
-			pNewHealth = EntityHelp.calculateRemainingHp({}, agent, patient);
+			pNewHealth = EntityHelp.calculateRemainingHp(effect, agent, patient);
 
 			$agentName.text(agent.stats.name);
 			$patientName.text(patient.stats.name);
@@ -327,7 +327,8 @@ module UI {
 				z = this.getAttribute('data-z'),
 				$cell,
 				patientId,
-				patient; //will be the target of action 
+				patient, //will be the target of action 
+				effect = currentTurn.equipment.rightHand.effect;
 			
 			//get effected cell
 			$cell = DomHelp.getMapCell($rows, x, y, z);
@@ -344,11 +345,10 @@ module UI {
 				}, null);
 
 				if (patient) {
-
-					showEffectStats(currentTurn, patient);
+					showEffectStats(effect, currentTurn, patient);
 					if (confirm("Are you sure you want to attack?")) {
 						//apply effects - damage for now
-						performAction(currentTurn, patient);
+						performAction(effect, currentTurn, patient);
 						clearAttackGrid();
 						acted = true;
 
@@ -358,8 +358,6 @@ module UI {
 
 					clearEffectStats();
 				}
-				else
-					console.warn("Attacked cell with no characters in it.");
 			}
 		}
 	}
@@ -373,9 +371,9 @@ module UI {
 	 * @param {Character} agent   The actor
 	 * @param {Character} patient the target
 	 */
-	function performAction(agent, patient) {
+	function performAction(effect, agent, patient) {
 		if (patient)
-			patient.stats.state.hp = EntityHelp.calculateRemainingHp({}, agent, patient);
+			patient.stats.state.hp = EntityHelp.calculateRemainingHp(effect, agent, patient);
 	}
 
 	/**

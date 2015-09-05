@@ -44,6 +44,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //base changes as you level up
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 1,
@@ -55,6 +56,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //changes depending on the job you have
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 4,
@@ -106,15 +108,7 @@ var characters = [
 			back: {}
 		},
 		equipment: {
-			rightHand: {
-				_id: '',
-				name: 'Dagger',
-				damage: -12,
-				distance: 1, //should there be a different measure of height?
-				heightModifier: 1, //increase/decrease range based on height difference
-				area: 1,//how to do custom, such as, all ground heights multiple of 4?
-				durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-			},
+			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d', //sword
 			leftHand: {
 				_id: '',
 				name: 'buckler',
@@ -170,6 +164,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //base changes as you level up
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 1,
@@ -181,6 +176,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //changes depending on the job you have
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 4,
@@ -232,15 +228,7 @@ var characters = [
 			back: {}
 		},
 		equipment: {
-			rightHand: {
-				_id: '',
-				name: 'Dagger',
-				damage: -12,
-				distance: 1, //should there be a different measure of height?
-				heightModifier: 1, //increase/decrease range based on height difference
-				area: 1,//how to do custom, such as, all ground heights multiple of 4?
-				durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-			},
+			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
 			leftHand: {
 				_id: '',
 				name: 'buckler',
@@ -295,6 +283,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //base changes as you level up
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 1,
@@ -306,6 +295,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //changes depending on the job you have
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 4,
@@ -357,15 +347,7 @@ var characters = [
 			back: {}
 		},
 		equipment: {
-			rightHand: {
-				_id: '',
-				name: 'Dagger',
-				damage: -12,
-				distance: 1, //should there be a different measure of height?
-				heightModifier: 1, //increase/decrease range based on height difference
-				area: 1,//how to do custom, such as, all ground heights multiple of 4?
-				durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-			},
+			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
 			leftHand: {
 				_id: '',
 				name: 'buckler',
@@ -420,6 +402,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //base changes as you level up
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 1,
@@ -431,6 +414,7 @@ var characters = [
 				faith: 70,
 				hp: 40, //changes depending on the job you have
 				mp: 11,
+				pa: 6,
 				move: 4,
 				jump: 2,
 				defense: 4,
@@ -482,15 +466,7 @@ var characters = [
 			back: {}
 		},
 		equipment: {
-			rightHand: {
-				_id: '',
-				name: 'Dagger',
-				damage: -12,
-				distance: 1, //should there be a different measure of height?
-				heightModifier: 1, //increase/decrease range based on height difference
-				area: 1,//how to do custom, such as, all ground heights multiple of 4?
-				durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-			},
+			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
 			leftHand: {
 				_id: '',
 				name: 'buckler',

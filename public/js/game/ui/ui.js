@@ -3,8 +3,7 @@
 /// <reference path="../helpers/gameHelp.ts" />
 var UI;
 (function (UI) {
-    /**
-     * Represents the map
+    /**	 * Represents the map
      * @type {jQuery}
      */
     var $map;
@@ -161,14 +160,15 @@ var UI;
     /**
      * This displays what will happen from an effect
      *
+     * @param {Object}    effect   What is happening
      * @param {Character} agent   The actor
      * @param {Character} patient the target
      */
-    function showEffectStats(agent, patient) {
-        var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = EntityHelp.calculateHealthChange({}, agent, patient), pHealth, pNewHealth;
+    function showEffectStats(effect, agent, patient) {
+        var $actionView = $('#action-effects-view'), $agentName = $actionView.find('.agent-name'), $aHealthChange = $actionView.find('.agent-health-change'), $patientName = $actionView.find('.patient-name'), $pHealthChange = $actionView.find('.patient-health-change'), aDamage = EntityHelp.calculateHealthChange(effect, agent, patient), pHealth, pNewHealth;
         if (patient) {
             pHealth = patient.stats.state.hp;
-            pNewHealth = EntityHelp.calculateRemainingHp({}, agent, patient);
+            pNewHealth = EntityHelp.calculateRemainingHp(effect, agent, patient);
             $agentName.text(agent.stats.name);
             $patientName.text(patient.stats.name);
             $pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
@@ -266,7 +266,7 @@ var UI;
      */
     function attack() {
         if (currentTurn) {
-            var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), z = this.getAttribute('data-z'), $cell, patientId, patient; //will be the target of action 
+            var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), z = this.getAttribute('data-z'), $cell, patientId, patient, effect = currentTurn.equipment.rightHand.effect;
             //get effected cell
             $cell = DomHelp.getMapCell($rows, x, y, z);
             //selected position may fail
@@ -281,10 +281,10 @@ var UI;
                         return c;
                 }, null);
                 if (patient) {
-                    showEffectStats(currentTurn, patient);
+                    showEffectStats(effect, currentTurn, patient);
                     if (confirm("Are you sure you want to attack?")) {
                         //apply effects - damage for now
-                        performAction(currentTurn, patient);
+                        performAction(effect, currentTurn, patient);
                         clearAttackGrid();
                         acted = true;
                         if (GameHelp.turnOver())
@@ -292,8 +292,6 @@ var UI;
                     }
                     clearEffectStats();
                 }
-                else
-                    console.warn("Attacked cell with no characters in it.");
             }
         }
     }
@@ -306,9 +304,9 @@ var UI;
      * @param {Character} agent   The actor
      * @param {Character} patient the target
      */
-    function performAction(agent, patient) {
+    function performAction(effect, agent, patient) {
         if (patient)
-            patient.stats.state.hp = EntityHelp.calculateRemainingHp({}, agent, patient);
+            patient.stats.state.hp = EntityHelp.calculateRemainingHp(effect, agent, patient);
     }
     /**
      * clear the different map-cell effect classes

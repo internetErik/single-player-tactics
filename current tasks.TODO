@@ -2,7 +2,7 @@
  Items not in order of priority
 
  ☐ More elaborate selection of turns
-   ☐ sort character by turn to find one highest over 100
+   ✔ sort character by turn to find one highest over 100 @done (15-08-26 06:57)
    ☐ more sophisticated selection between characters with the same turn value   
  
  ☐ Secondary menu for attack that will house job skills and selected secondary skills
@@ -22,3 +22,70 @@
 RnD
  ☐ Canvas representation of map in 3d so current map can merely show if it is moveable, etc
  ☐ Canvas 2d characters
+
+
+
+ //////////////////////////////////////////////
+ // Design of json for abilities
+
+//faw with all attacks
+//http://www.gamefaqs.com/ps/197339-final-fantasy-tactics/faqs/3859
+
+//faq with all attack damage forumas
+//http://www.gamefaqs.com/ps/197339-final-fantasy-tactics/faqs/3876
+
+ /////////////
+ // Squire
+ /////////////
+
+ {
+   name: 'Accumulate',
+   type: 'buff',
+   range: 'self',
+   vertical: 0,
+   target: 'self',
+   effect: [{
+     attribute: 'physical attack',
+     change: 1
+   }]
+ },
+ {
+   name: 'Dash',
+   type: 'physical attack',
+   range: 1,
+   vertical: 1,
+   effect: [{
+     attribute: 'health',
+     change: ['PA', '*', 2] //PA = physical attack.  should I do order of operations?
+     //or
+     change: function(a,p, o, t) {
+       //a = agent, p = patient, o = origin, t = target
+       return a.PA *2;
+     }
+   },{
+     special: 'knockback' //knockback can be a defined effect
+   }]
+ },
+ {
+   name: 'Throw Stone',
+   type: 'physical attack',
+   range: 4,
+   vertical: 4
+ }
+
+ /////////////
+ // Wizard
+ /////////////
+
+{
+  name: 'Fire',
+  type: 'magic',
+  range: 4,
+  vertical: 4,
+  effectRange: 1,
+  effectVertical: 2,
+  effect: {
+    attribute: 'health',
+    change: [] //Damage = [CFa/100 * TFa/100 * MA * 14] 
+  }
+}

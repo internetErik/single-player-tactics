@@ -41,7 +41,7 @@ var EntityHelp;
      * @param {[type]} patient the target of action
      */
     function calculateHealthChange(effect, agent, patient) {
-        return agent.stats.state.damage + patient.stats.state.defense;
+        return effect.damage(agent, patient);
     }
     EntityHelp.calculateHealthChange = calculateHealthChange;
     /**

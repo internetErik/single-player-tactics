@@ -29,6 +29,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -40,6 +41,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -74,15 +76,7 @@ var characters = [
             back: {}
         },
         equipment: {
-            rightHand: {
-                _id: '',
-                name: 'Dagger',
-                damage: -12,
-                distance: 1,
-                heightModifier: 1,
-                area: 1,
-                durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-            },
+            rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
             leftHand: {
                 _id: '',
                 name: 'buckler',
@@ -138,6 +132,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -149,6 +144,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -183,15 +179,7 @@ var characters = [
             back: {}
         },
         equipment: {
-            rightHand: {
-                _id: '',
-                name: 'Dagger',
-                damage: -12,
-                distance: 1,
-                heightModifier: 1,
-                area: 1,
-                durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-            },
+            rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
             leftHand: {
                 _id: '',
                 name: 'buckler',
@@ -246,6 +234,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -257,6 +246,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -291,15 +281,7 @@ var characters = [
             back: {}
         },
         equipment: {
-            rightHand: {
-                _id: '',
-                name: 'Dagger',
-                damage: -12,
-                distance: 1,
-                heightModifier: 1,
-                area: 1,
-                durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-            },
+            rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
             leftHand: {
                 _id: '',
                 name: 'buckler',
@@ -354,6 +336,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -365,6 +348,7 @@ var characters = [
                 faith: 70,
                 hp: 40,
                 mp: 11,
+                pa: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -399,15 +383,7 @@ var characters = [
             back: {}
         },
         equipment: {
-            rightHand: {
-                _id: '',
-                name: 'Dagger',
-                damage: -12,
-                distance: 1,
-                heightModifier: 1,
-                area: 1,
-                durability: 100 //0 = broken (then gets removed), 100 is max, -1 is unbreakable
-            },
+            rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
             leftHand: {
                 _id: '',
                 name: 'buckler',
