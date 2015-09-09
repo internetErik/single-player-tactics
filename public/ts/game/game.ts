@@ -1,10 +1,12 @@
 /// <reference path="../../tsd/typings/tsd.d.ts" />
 /// <reference path="data/maps/map.ts" />
+/// <reference path="data/objects/weapons.ts" />
 /// <reference path="data/characters/characters.ts" />
 /// <reference path="helpers/domHelp.ts" />
 /// <reference path="helpers/entityHelp.ts" />
 /// <reference path="helpers/gameHelp.ts" />
 /// <reference path="ui/ui.ts" />
+/// <reference path="../types/types.ts" />
 
 /**
  * This represents the character that is currently active
@@ -43,34 +45,20 @@ module Game {
         return _instance;
     }
 
-	/**
-	 * Flag that tells us if the game is still going
-	 * @type {Boolean}
-	 */
-	var gameOn: boolean;
-
-	/**
-	 * These track if the teams are dead yet
-	 * @type {Boolean}
-	 */
-	var team1Alive: boolean;
-	var team2Alive: boolean;
 
 	/**
 	 * These not used yet.  Neet to be refactored in
 	 */
 	var activeTurn;
 	var map: Map;
-	// var characters: Array<any>;
 	//end unused fields
 
 	function Game() {
         
         // See if we have already tried to initialize this.  
         // It's impossible to do, really, without code modification, so this is more of a note for future developers
-        if(_instance){
+        if(_instance)
             throw new Error("Error: Instantiation failed: Use Game.getInstance() instead of new.");
-        }
 
         //assign properties on to our _instance
 		this.gameOn = true;
@@ -78,15 +66,24 @@ module Game {
 		this.team2Alive = true;
 		this.gameLoop = gameLoop;
 
+		this.tcharacters = [];
+
 		//extend character objects with getters
 		// When characters are represented by a class we won't do this
-		characters.forEach(function(character){
+		characters.forEach((function(character){
+
 			character.getState = function(stat) {
 				return this.stats.state[stat];
 			};
 			character.equipment.rightHand = weapons[0];//longsword
-		});
 
+			//init characters as classes
+			this.tcharacters.push(new Character(character));
+			
+		}).bind(this));
+
+		console.dir(this.tcharacters);
+		
 		//basicMap and characters are hardcoded data
 		UI.initGameUI(basicMap, characters);
 	}
@@ -110,13 +107,13 @@ module Game {
 			currentTurn = EntityHelp.advanceTime(characters);
 
 		if (currentTurn)
-			gameOn = isGameOn(characters);
+			this.gameOn = isGameOn(characters);
 		
 		//Put current characters name over the menu
 		$('.active-character').text(currentTurn.stats.name);		
 		
 		//if game still call gameLoop again
-		if (gameOn)
+		if (this.gameOn)
 			setTimeout(gameLoop, 1000);
 		else
 			UI.displayVictor(_instance.team1Alive, _instance.team2Alive);

@@ -2,13 +2,14 @@ function roll(dice: number, sides: number): number {
 	return (dice === 0 || sides === 0) ? 
 			0 : 
 			Array.apply(dice, Array(dice))
-			.map(function() { 
-				return Math.ceil(Math.random() * sides);
-			})
-			.reduce(function(p,c,n){
-				return p + c;
-			}, 0);
+				.map(function() { 
+					return Math.ceil(Math.random() * sides);
+				})
+				.reduce(function(p,c,n){
+					return p + c;
+				}, 0);
 }
+
 var weapons = [
 	 /////////////
 	 // Sword

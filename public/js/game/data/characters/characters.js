@@ -1,15 +1,3 @@
-// module Character {
-// 	export class Character
-// 		extends Entity
-// 		implements ITimely, IAlive, ILocated, IMoveable, IDirected {
-// 		/**
-// 		 * See ITimely
-// 		 */
-// 		getTurn() {
-// 			return 1;
-// 		}
-// 	}
-// }
 var Entity = (function () {
     function Entity() {
     }
@@ -17,7 +5,7 @@ var Entity = (function () {
 })();
 var characters = [
     {
-        _id: '1',
+        _id: '01e3d7cb-98d1-40fa-a294-011a9d9c44ce',
         team: 1,
         stats: {
             name: 'Erik',
@@ -30,6 +18,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -42,6 +31,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -78,7 +68,7 @@ var characters = [
         equipment: {
             rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
             leftHand: {
-                _id: '',
+                _id: '8e2894de-3d1d-4598-8b55-3d82ce275266',
                 name: 'buckler',
                 defense: 3,
                 block: 15,
@@ -120,7 +110,7 @@ var characters = [
         ]
     },
     {
-        _id: '2',
+        _id: '78a5ae45-5fbb-4edc-8c96-01b031b29d8e',
         team: 1,
         stats: {
             name: 'Liesl',
@@ -133,6 +123,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -145,6 +136,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -222,7 +214,7 @@ var characters = [
         ]
     },
     {
-        _id: '3',
+        _id: '573c8480-63a5-4eec-91b1-db010795635c',
         team: 2,
         stats: {
             name: 'Leibniz',
@@ -235,6 +227,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -247,6 +240,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,
@@ -324,7 +318,7 @@ var characters = [
         ]
     },
     {
-        _id: '4',
+        _id: '891cc14f-ea72-46a0-9333-7576d9b5b8cb',
         team: 2,
         stats: {
             name: 'Spinoza',
@@ -337,6 +331,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 1,
@@ -349,6 +344,7 @@ var characters = [
                 hp: 40,
                 mp: 11,
                 pa: 6,
+                ma: 6,
                 move: 4,
                 jump: 2,
                 defense: 4,

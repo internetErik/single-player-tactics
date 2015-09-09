@@ -31,7 +31,7 @@ module UI {
 			loadMapInDOM(map);
 			
 			//cache the rows of the map
-			cacheRows();
+			cacheRows(); 
 
 			//set up events on map
 			bindCells();
