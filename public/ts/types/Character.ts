@@ -56,7 +56,7 @@ class Character {
 		this.position = 
 			new CharacterPosition(tmpPos.x, tmpPos.y, tmpPos.z, Direction.north);
 
-		this.equipment = new CharacterEquipment();
+		this.equipment = new CharacterEquipment(c.equipment);
 
 		this.actions = new CharacterActions();
 

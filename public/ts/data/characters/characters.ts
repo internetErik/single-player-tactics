@@ -96,17 +96,11 @@ var characters = [
 			back: {}
 		},
 		equipment: {
-			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d', //sword
-			leftHand: {
-				_id: '8e2894de-3d1d-4598-8b55-3d82ce275266',
-				name: 'buckler',
-				defense: 3,
-				block: 15, //chance to block
-				durability: 100
-			},
-			head: {},
-			body: {},
-			accessory: {}
+			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
+			leftHand: null,
+			head: null,
+			body: null,
+			accessory: null
 		},
 		actions: {
 			//This should show in the action menu
@@ -219,16 +213,10 @@ var characters = [
 		},
 		equipment: {
 			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
-			leftHand: {
-				_id: '',
-				name: 'buckler',
-				defense: 3,
-				block: 15, //chance to block
-				durability: 100
-			},
-			head: {},
-			body: {},
-			accessory: {}
+			leftHand: null,
+			head: null,
+			body: null,
+			accessory: null
 		},
 		actions: {
 			primary: 'Basic Skills',
@@ -340,16 +328,10 @@ var characters = [
 		},
 		equipment: {
 			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
-			leftHand: {
-				_id: '',
-				name: 'buckler',
-				defense: 3,
-				block: 15, //chance to block
-				durability: 100
-			},
-			head: {},
-			body: {},
-			accessory: {}
+			leftHand: null,
+			head: null,
+			body: null,
+			accessory: null
 		},
 		actions: {
 			primary: 'Basic Skills',
@@ -461,16 +443,10 @@ var characters = [
 		},
 		equipment: {
 			rightHand: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
-			leftHand: {
-				_id: '',
-				name: 'buckler',
-				defense: 3,
-				block: 15, //chance to block
-				durability: 100
-			},
-			head: {},
-			body: {},
-			accessory: {}
+			leftHand: null,
+			head: null,
+			body: null,
+			accessory: null
 		},
 		actions: {
 			primary: 'Basic Skills',

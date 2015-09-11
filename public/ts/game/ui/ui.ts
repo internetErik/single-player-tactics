@@ -14,13 +14,16 @@ module UI {
 	 */
 	var $rows;
 
+	var characters: Character[] = [];
+
 	/**
 	 * Initializes the user interface
 	 * 
 	 * @param {Map} map        the map we are loading
 	 * @param {Array<Character>} characters All the characters being used
 	 */
-	export function initGameUI(map, characters) {
+	export function initGameUI(map, chars: Character[]) {
+		characters = chars;
 
 		//initialize game only after everything is ready
 		$(document).ready(function() { 
@@ -37,7 +40,7 @@ module UI {
 			bindCells();
 
 			//position characters initially
-			loadCharactersInDOM(characters);
+			loadCharactersInDOM();
 
 			//bind click and keyboard events on menu 
 			bindMenu();
@@ -50,7 +53,7 @@ module UI {
 	/**
 	 * Display the victory message
 	 */
-	export function displayVictor(team1Alive, team2Alive) {
+	export function displayVictor(team1Alive: boolean, team2Alive: boolean): void {
 		if (team1Alive && ! team2Alive)
 			$('#victory-message h1').text('Team 1 Wins!');
 		else if(team2Alive && ! team1Alive)
@@ -60,14 +63,14 @@ module UI {
 	/**
 	 * Loads map into global variable $map
 	 */
-	function cacheMap() {
+	function cacheMap(): void {
 		$map = $('#map');
 	}
 
 	/**
 	 * loads each row of the map into global variable $rows
 	 */
-	function cacheRows() {
+	function cacheRows(): void {
 		//$rows is a global
 		$rows = $('#map .map-row');
 	}
@@ -75,7 +78,7 @@ module UI {
 	/**
 	 * This function loads the map into the DOM
 	 */
-	function loadMapInDOM(map) {
+	function loadMapInDOM(map): void {
 		var k;
 			
 		for (k = 0; k <= map.size.z; k += 1) {
@@ -96,7 +99,7 @@ module UI {
 	 * @param  {number} level the number of the level we are on
 	 * @return {string}          the resulting html to be appended to DOM
 	 */
-	function generateLevel(rows: Array<any>, level: number): string {
+	function generateLevel(rows: any[], level: number): string {
 		var innerLevel = '',
 			sideWidth = 75; //the width/height of these squares
 
@@ -125,7 +128,7 @@ module UI {
 	/**
 	 * This function loads ALL of the characters into the DOM
 	 */
-	function loadCharactersInDOM(characters) {
+	function loadCharactersInDOM(): void {
 		//currently using dummy data for characters
 		characters.forEach(positionCharacterInDom);
 	}
@@ -133,7 +136,7 @@ module UI {
 	/**
 	 * Bind the various menu options to generic functions
 	 */
-	function bindMenu() {
+	function bindMenu(): void {
 		$('#action-menu [data-action=move]').click(turnModeMove);
 		$('#action-menu [data-action=attack]').click(turnModeAttack);
 		$('#action-menu [data-action=wait]').click(characterWait);
@@ -163,16 +166,16 @@ module UI {
 	 * The character placed in the DOM is given an #id === to the character's _id
 	 * @param      {Character}  c       This represents a single character
 	 */
-	function positionCharacterInDom(c) {
+	function positionCharacterInDom(c: Character): void {
 		// This line 
 	 	// 	1) gets the row we are in, then 
 		// 	2) finds the cell in that row, then 
 		// 	3) makes that a jquery object
-		var $cell = DomHelp.getMapCell($rows, c.stats.state.position.x, c.stats.state.position.y, c.stats.state.position.z),
+		var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z),
 			insert = ''; //this is the html we will insert
 
 		insert = '<span class="character" id="' + c._id + '"">';
-		insert += c.stats.name;
+		insert += c.name;
 		insert += '</span>';
 
 		$(insert).appendTo($cell);
@@ -182,7 +185,7 @@ module UI {
 	 * Very simple removal of character from the DOM
 	 * the characters _id was used in creating the DOM element
 	 */
-	function clearCharacterInDom(c) {
+	function clearCharacterInDom(c: Character) {
 		$('#' + c._id).remove();
 	}
 
@@ -193,7 +196,7 @@ module UI {
 	 * @param {Character} agent   The actor
 	 * @param {Character} patient the target
 	 */
-	function showEffectStats(effect, agent, patient) {
+	function showEffectStats(effect, agent: Character, patient: Character) {
 		var $actionView = $('#action-effects-view'),
 			$agentName = $actionView.find('.agent-name'),
 			$aHealthChange = $actionView.find('.agent-health-change'),
@@ -204,16 +207,16 @@ module UI {
 			pNewHealth;
 		
 		if (patient) {
-			pHealth = patient.stats.state.hp;
+			pHealth = patient.cstat.hp;
 			pNewHealth = EntityHelp.calculateRemainingHp(effect, agent, patient);
 
-			$agentName.text(agent.stats.name);
-			$patientName.text(patient.stats.name);
+			$agentName.text(agent.name);
+			$patientName.text(patient.name);
 
 			$pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
 		}
 		else {
-			$agentName.text(agent.stats.name);
+			$agentName.text(agent.name);
 			$patientName.text("Nobody");
 		}
 	}
@@ -221,7 +224,7 @@ module UI {
 	/**
 	 * Clears display information from an effect on a target
 	 */
-	function clearEffectStats() {
+	function clearEffectStats(): void {
 		var $actionView = $('#action-effects-view'),
 			$agentName = $actionView.find('.agent-name'),
 			$aHealthChange = $actionView.find('.agent-health-change'),
@@ -236,10 +239,8 @@ module UI {
 	/**
 	 * Shows the moveable area.  
 	 * Should calculate this, but now just effects entire area.
-	 * 
-	 * @param {Character} c [description]
 	 */
-	function showMoveGrid(c) {
+	function showMoveGrid(): void {
 		//we could calculate, but instead we'll just make the whole map moveable
 		$('.map-cell').addClass('map-cell_moveable');
 	}
@@ -248,7 +249,7 @@ module UI {
 	 * This function is called to stop movement action.
 	 * Used both if a movement is selected, or if it is cancelled
 	 */
-	function clearMoveGrid() {
+	function clearMoveGrid(): void {
 		$('.map-cell').removeClass('map-cell_moveable');
 	}
 
@@ -256,10 +257,8 @@ module UI {
 	 * Add attackable class to all map cells
 	 *
 	 * ToDo: this should be calculated.
-	 * 
-	 * @param {Character} c [description]
 	 */
-	function showAttackGrid(c) {	
+	function showAttackGrid(): void {	
 		//we could calculate, but instead we'll just make the whole map moveable
 		$('.map-cell').addClass('map-cell_attackable');
 	}
@@ -267,7 +266,7 @@ module UI {
 	/**
 	 * Remove the attackable class from map cells
 	 */
-	function clearAttackGrid() {
+	function clearAttackGrid(): void {
 		$('.map-cell').removeClass('map-cell_attackable');
 	}
 
@@ -278,7 +277,7 @@ module UI {
 	 * I bind the context of the event to the function so 
 	 * `this` will be the cell clicked on.
 	 */
-	function cellInteraction() {
+	function cellInteraction(): void {
 		// how do I not need turnMode?
 		// Could I use the current class on this?
 		if (turnMode === 'move') move.bind(this)();
@@ -289,7 +288,7 @@ module UI {
 	 * positions character and clears current turn when a movement has been
 	 * decided on
 	 */
-	function move() {
+	function move(): void {
 		//how do I stop needing the currentTurn object?
 		//we only do something if there is a character with a turn
 		if(currentTurn) {
@@ -302,9 +301,9 @@ module UI {
 			
 			//selected position may fail
 			if(DomHelp.moveableMapCell($cell)) {
-				currentTurn.stats.state.position.x = x;
-				currentTurn.stats.state.position.y = y;
-				currentTurn.stats.state.position.z = z;
+				currentTurn.position.x = x;
+				currentTurn.position.y = y;
+				currentTurn.position.z = z;
 				clearCharacterInDom(currentTurn);
 				positionCharacterInDom(currentTurn);
 				clearMoveGrid();
@@ -320,7 +319,7 @@ module UI {
 	 * This is called when a character is attacking and has clicked on 
 	 * another cell.  We don't know if this cell has a target in it yet.
 	 */
-	function attack() {
+	function attack(): void {
 		if(currentTurn) {
 			var x = this.getAttribute('data-x'),
 				y = this.getAttribute('data-y'),
@@ -328,7 +327,7 @@ module UI {
 				$cell,
 				patientId,
 				patient, //will be the target of action 
-				effect = currentTurn.equipment.rightHand.effect;
+				effect = <Weapon>(currentTurn.equipment.rightHand).effect;
 			
 			//get effected cell
 			$cell = DomHelp.getMapCell($rows, x, y, z);
@@ -371,9 +370,9 @@ module UI {
 	 * @param {Character} agent   The actor
 	 * @param {Character} patient the target
 	 */
-	function performAction(effect, agent, patient) {
+	function performAction(effect, agent: Character, patient: Character): void {
 		if (patient)
-			patient.stats.state.hp = EntityHelp.calculateRemainingHp(effect, agent, patient);
+			patient.cstat.hp = EntityHelp.calculateRemainingHp(effect, agent, patient);
 	}
 
 	/**
@@ -391,11 +390,10 @@ module UI {
 	 * @param {number} turnCharge the value to set the character's turn 
 	 *                              to if they haven't done anything.
 	 */
-	function clearCurrentTurn(turnCharge: number = 0) {
+	function clearCurrentTurn(turnCharge: number = 0): void {
 		defaultMapState();
 		
-		currentTurn.stats.state.turn = (moved || acted) ? 
-										0 : turnCharge;
+		currentTurn.ct = (moved || acted) ? 0 : turnCharge;
 
 		currentTurn = null;
 		moved = false;
@@ -410,7 +408,7 @@ module UI {
 	 * or pressing 'w' when a player has a turn
 	 * has character miss turn, but regain some turn charge
 	 */
-	function characterWait() {
+	function characterWait(): void {
 		if(currentTurn && confirm("Wait and pass on your turn?")) {
 			clearCurrentTurn(50);//pass in a value to set character turn to
 		}
@@ -420,10 +418,10 @@ module UI {
 	 * The function triggered by clicking the 'move' button in the menu
 	 * or pressing 'm' when a player has a turn
 	 */
-	function turnModeMove() {
+	function turnModeMove(): void {
 		//we only do something if there is a character with a turn
 		if(currentTurn && ! moved) {
-			showMoveGrid(currentTurn);
+			showMoveGrid();
 			turnMode = 'move';
 		}
 	}
@@ -432,9 +430,9 @@ module UI {
 	 * This function is used to show the attack area, and make it selectable
 	 * or pressing 'a' when a player has a turn
 	 */
-	function turnModeAttack() {
+	function turnModeAttack(): void {
 		if(currentTurn && ! acted) {
-			showAttackGrid(currentTurn);
+			showAttackGrid();
 			turnMode = 'attack';
 		}
 	}

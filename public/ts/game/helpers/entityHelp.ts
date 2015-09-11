@@ -4,26 +4,26 @@ module EntityHelp {
 	 * Advance all things that have a turn according to their speed.
 	 * If anyone gets turn >= 100, set currentTurn to them
 	 */
-	export function advanceTime(characters) {
-		var currentTurn,
-			candidates;
+	export function advanceTime(characters: Character[]) {
+		var currentTurn: Character,
+			candidates: Character[];
 		//ToDo: I need to plan out a list of upcoming turns and simply
 		//	reorder that based on new events added to queue 
 			
 		//iterate through all characters and advance their turn
-		characters.forEach(function(character) {
-			character.stats.state.turn += character.stats.state.speed;
+		characters.forEach(function(character: Character) {
+			character.ct += character.cstat.speed;
 		});
 
 		//find characters that are at or over 100 and sort them by highest turn
-		candidates = characters.filter(function(character){
-		return (character.stats.state.hp > 0 && 
-				character.stats.state.turn >= 100) ?
+		candidates = characters.filter(function(character: Character){
+		return (character.cstat.hp > 0 && 
+				character.ct >= 100) ?
 				true : false;
-		}).sort(function(a,b){
-			if(a.stats.state.turn > b.stats.state.turn)
+		}).sort(function(a: Character, b: Character){
+			if(a.ct > b.ct)
 				return 1;
-			else if(a.stats.state.turn < b.stats.state.turn)
+			else if(a.ct < b.ct)
 				return -1;
 			return 0;
 		});
@@ -45,7 +45,7 @@ module EntityHelp {
 	 * @param {[type]} agent   the actor
 	 * @param {[type]} patient the target of action
 	 */
-	export function calculateHealthChange(effect, agent, patient): number {
+	export function calculateHealthChange(effect, agent: Character, patient: Character): number {
 		return effect(agent, patient);
 	}
 
@@ -57,8 +57,8 @@ module EntityHelp {
 	 * @param {[type]} agent   The actor
 	 * @param {[type]} patient The target of action
 	 */
-	export function calculateRemainingHp(effect, agent, patient): number {
-		var hp = patient.stats.state.hp + calculateHealthChange(effect, agent, patient); 
+	export function calculateRemainingHp(effect, agent: Character, patient: Character): number {
+		var hp = patient.cstat.hp + calculateHealthChange(effect, agent, patient); 
 
 		//don't allow hp to reduce below 0
 		return (hp >= 0) ? hp : 0;

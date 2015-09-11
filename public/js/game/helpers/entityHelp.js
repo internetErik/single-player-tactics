@@ -10,17 +10,17 @@ var EntityHelp;
         //	reorder that based on new events added to queue 
         //iterate through all characters and advance their turn
         characters.forEach(function (character) {
-            character.stats.state.turn += character.stats.state.speed;
+            character.ct += character.cstat.speed;
         });
         //find characters that are at or over 100 and sort them by highest turn
         candidates = characters.filter(function (character) {
-            return (character.stats.state.hp > 0 &&
-                character.stats.state.turn >= 100) ?
+            return (character.cstat.hp > 0 &&
+                character.ct >= 100) ?
                 true : false;
         }).sort(function (a, b) {
-            if (a.stats.state.turn > b.stats.state.turn)
+            if (a.ct > b.ct)
                 return 1;
-            else if (a.stats.state.turn < b.stats.state.turn)
+            else if (a.ct < b.ct)
                 return -1;
             return 0;
         });
@@ -53,7 +53,7 @@ var EntityHelp;
      * @param {[type]} patient The target of action
      */
     function calculateRemainingHp(effect, agent, patient) {
-        var hp = patient.stats.state.hp + calculateHealthChange(effect, agent, patient);
+        var hp = patient.cstat.hp + calculateHealthChange(effect, agent, patient);
         //don't allow hp to reduce below 0
         return (hp >= 0) ? hp : 0;
     }

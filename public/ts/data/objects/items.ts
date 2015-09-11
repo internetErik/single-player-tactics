@@ -10,20 +10,22 @@ function roll(dice: number, sides: number): number {
 				}, 0);
 }
 
-var weapons = [
+//mock database
+var items = [
 	 /////////////
-	 // Sword
+	 // Swords
 	 /////////////
 	 {
 	 	_id: 'eae994d1-edc8-4c70-92e0-901f45b6ad4d',
 	 	hands: 1,
 	 	name: 'Longsword',
-	 	itemType: 'sword',
-		effectType: 'physical',
+	 	itemType: ItemType.weapon,
+		weaponType: WeaponType.sword,
+		damageType: DamageType.physical,
+	 	rangeType: RangeType.lineOfSight,
 	 	effect: function(agent, patient){
 	 		return -1*(agent.stats.state.pa + roll(1,10));
 	 	},
-	 	rangeType: 'line-of-sight',
 	 	range: {
 	 		min: 1,
 	 		max: 1,
@@ -32,19 +34,19 @@ var weapons = [
 		areaOfEffect: 1
 	 },
 	 /////////////
-	 // Lance
-	 // 
+	 // Polearms
 	 /////////////
 	 {
 	 	_id: '9dc7d530-7f05-40c3-bcc9-aee3701c257e',
 	 	hands: 2,
 	 	name: 'Lance',
-	 	itemType: 'lance',
-		effectType: 'physical',
+		itemType: ItemType.weapon,
+		weaponType: WeaponType.polearm,
+		damageType: DamageType.physical,
+		rangeType: RangeType.lineOfSight,
 		effect: function(agent, patient){
 	 		return -1*(agent.stats.state.pa + roll(1,10));
 	 	},
-		rangeType: 'line-of-sight',
 		range: {
 		  min: 1,
 		  max: 2,
@@ -53,18 +55,19 @@ var weapons = [
 		areaOfEffect: 1
 	 },
 	 /////////////
-	 // Bow
+	 // Bows
 	 /////////////
 	{
 		_id: '2b7bda18-4f7a-4c19-8079-83d907d5c413',
-		hands: 2,
 		name: 'Windslasher',
-		itemType: 'bow',
-		effectType: 'physical',
+		itemType: ItemType.weapon,
+		weaponType: WeaponType.bow,
+		damageType: DamageType.physical,
+		rangeType: RangeType.arc,
+		hands: 2,
 		effect: function(agent, patient){
 		 		return -1*(agent.stats.state.pa + roll(1,8));
 		},
-		rangeType: 'arc',
 		range: function(o, t) {
 			//o(=origin) and t(=target) are {x:number,y:number,z:number}
 			var range,
@@ -76,5 +79,13 @@ var weapons = [
 			range = baseRange + (heightDiff / 3);
 		},
 		areaOfEffect: 1
-	}
+	},
+	 /////////////
+	 // Shields
+	 /////////////
+	 {
+	 	_id: '4e01c5b2-9023-4d3d-b25d-7c017567eaa7',
+	 	name: 'Buckler',
+	 	itemType: ItemType.shield
+	 }
 ];
