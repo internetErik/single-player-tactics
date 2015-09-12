@@ -101,41 +101,41 @@ module Game {
 				currentTurn = EntityHelp.advanceTime(this.characters);
 
 			if (currentTurn)
-				this.gameOn = isGameOn(this.characters);
+				this.gameOn = this.isGameOn(this.characters);
 					
 			//Put current characters name over the menu
 			$('.active-character').text(currentTurn.name);		
 					
 			//if game still call gameLoop again
 			if (this.gameOn)
-				setTimeout(this.gameLoop, 1000);
+				setTimeout(this.gameLoop.bind(this), 1000);
 			else
 				UI.displayVictor(this.team1Alive, this.team2Alive);
 		}
-	}
 
 
-	/**
-	 * Decides if the game is still going
-	 *
-	 * set both teams to dead (teamXAlive = false)
-	 * loop through characters.
-	 * 	if they are alive, set their team to true
-	 * 
-	 * @return {boolean} the new value of gameOn
-	 */
-	function isGameOn(characters: Character[]): boolean {
-		var team1Alive = false;
-		var team2Alive = false;
+		/**
+		 * Decides if the game is still going
+		 *
+		 * set both teams to dead (teamXAlive = false)
+		 * loop through characters.
+		 * 	if they are alive, set their team to true
+		 * 
+		 * @return {boolean} the new value of gameOn
+		 */
+		isGameOn(characters: Character[]): boolean {
+			var team1Alive = false;
+			var team2Alive = false;
 
-		characters.forEach(function(c) {
-			if (c.cstat.hp > 0)
-				(c.team === 1) ?
-					team1Alive = true :
-					team2Alive = true;
-		});
+			characters.forEach(function(c) {
+				if (c.cstat.hp > 0)
+					(c.team === 1) ?
+						team1Alive = true :
+						team2Alive = true;
+			});
 
-		return (team1Alive && team2Alive);
+			return (team1Alive && team2Alive);
+		}
 	}
 
 	/**
