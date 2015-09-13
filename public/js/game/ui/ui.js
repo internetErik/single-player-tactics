@@ -1,15 +1,19 @@
-/// <reference path="../helpers/domHelp.ts" />
-/// <reference path="../helpers/entityHelp.ts" />
-/// <reference path="../helpers/gameHelp.ts" />
 var UI;
 (function (UI) {
+    /****************************************
+     * EXPORTED
+     *
+     * function initGameUI
+     * function displayVictor
+     *
+     ****************************************/
     /**	 * Represents the map
-     * @type {jQuery}
+     * @type {JQuery}
      */
     var $map;
     /**
      * Cache of all the rows in the map
-     * @type {jQuery}
+     * @type {JQuery}
      */
     var $rows;
     var characters = [];
@@ -40,16 +44,6 @@ var UI;
         });
     }
     UI.initGameUI = initGameUI;
-    /**
-     * Display the victory message
-     */
-    function displayVictor(team1Alive, team2Alive) {
-        if (team1Alive && !team2Alive)
-            $('#victory-message h1').text('Team 1 Wins!');
-        else if (team2Alive && !team1Alive)
-            $('#victory-message h1').text('Team 2 Wins!');
-    }
-    UI.displayVictor = displayVictor;
     /**
      * Loads map into global variable $map
      */
@@ -112,6 +106,24 @@ var UI;
         characters.forEach(positionCharacterInDom);
     }
     /**
+     * This function loads on character into the DOM. It is called by
+     * loadCharactersInDom()
+     *
+     * The character placed in the DOM is given an #id === to the character's _id
+     * @param      {Character}  c       This represents a single character
+     */
+    function positionCharacterInDom(c) {
+        // This line 
+        // 	1) gets the row we are in, then 
+        // 	2) finds the cell in that row, then 
+        // 	3) makes that a jquery object
+        var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z), insert = ''; //this is the html we will insert
+        insert = '<span class="character" id="' + c._id + '"">';
+        insert += c.name;
+        insert += '</span>';
+        $(insert).appendTo($cell);
+    }
+    /**
      * Bind the various menu options to generic functions
      */
     function bindMenu() {
@@ -133,24 +145,6 @@ var UI;
      */
     function bindViewMenu() {
         // $('#view-controls [data-action=turn]').click(turnUiAction);
-    }
-    /**
-     * This function loads on character into the DOM. It is called by
-     * loadCharactersInDom()
-     *
-     * The character placed in the DOM is given an #id === to the character's _id
-     * @param      {Character}  c       This represents a single character
-     */
-    function positionCharacterInDom(c) {
-        // This line 
-        // 	1) gets the row we are in, then 
-        // 	2) finds the cell in that row, then 
-        // 	3) makes that a jquery object
-        var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z), insert = ''; //this is the html we will insert
-        insert = '<span class="character" id="' + c._id + '"">';
-        insert += c.name;
-        insert += '</span>';
-        $(insert).appendTo($cell);
     }
     /**
      * Very simple removal of character from the DOM
@@ -361,4 +355,14 @@ var UI;
             turnMode = 'attack';
         }
     }
+    /**
+     * Display the victory message
+     */
+    function displayVictor(team1Alive, team2Alive) {
+        if (team1Alive && !team2Alive)
+            $('#victory-message h1').text('Team 1 Wins!');
+        else if (team2Alive && !team1Alive)
+            $('#victory-message h1').text('Team 2 Wins!');
+    }
+    UI.displayVictor = displayVictor;
 })(UI || (UI = {}));

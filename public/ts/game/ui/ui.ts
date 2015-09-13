@@ -1,18 +1,23 @@
-/// <reference path="../helpers/domHelp.ts" />
-/// <reference path="../helpers/entityHelp.ts" />
-/// <reference path="../helpers/gameHelp.ts" />
-
 module UI {
+	/****************************************
+	 * EXPORTED
+	 *
+	 * function initGameUI
+	 * function displayVictor
+	 * 
+	 ****************************************/
+
+
 	/**	 * Represents the map
-	 * @type {jQuery}
+	 * @type {JQuery}
 	 */
-	var $map;
+	var $map: JQuery;
 
 	/**
 	 * Cache of all the rows in the map
-	 * @type {jQuery}
+	 * @type {JQuery}
 	 */
-	var $rows;
+	var $rows: JQuery;
 
 	var characters: Character[] = [];
 
@@ -48,16 +53,6 @@ module UI {
 			//bind ui view menu
 			bindViewMenu();
 		});
-	}
-
-	/**
-	 * Display the victory message
-	 */
-	export function displayVictor(team1Alive: boolean, team2Alive: boolean): void {
-		if (team1Alive && ! team2Alive)
-			$('#victory-message h1').text('Team 1 Wins!');
-		else if(team2Alive && ! team1Alive)
-			$('#victory-message h1').text('Team 2 Wins!');
 	}
 
 	/**
@@ -134,6 +129,28 @@ module UI {
 	}
 
 	/**
+	 * This function loads on character into the DOM. It is called by
+	 * loadCharactersInDom()
+	 * 
+	 * The character placed in the DOM is given an #id === to the character's _id
+	 * @param      {Character}  c       This represents a single character
+	 */
+	function positionCharacterInDom(c: Character): void {
+		// This line 
+		// 	1) gets the row we are in, then 
+		// 	2) finds the cell in that row, then 
+		// 	3) makes that a jquery object
+		var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z),
+			insert = ''; //this is the html we will insert
+
+		insert = '<span class="character" id="' + c._id + '"">';
+		insert += c.name;
+		insert += '</span>';
+
+		$(insert).appendTo($cell);
+	}
+
+	/**
 	 * Bind the various menu options to generic functions
 	 */
 	function bindMenu(): void {
@@ -155,37 +172,15 @@ module UI {
 	 * Bind the buttons for the ui view options such as turn
 	 * and tilt
 	 */
-	function bindViewMenu() {
+	function bindViewMenu(): void {
 		// $('#view-controls [data-action=turn]').click(turnUiAction);
-	}
-
-	/**
-	 * This function loads on character into the DOM. It is called by
-	 * loadCharactersInDom()
-	 * 
-	 * The character placed in the DOM is given an #id === to the character's _id
-	 * @param      {Character}  c       This represents a single character
-	 */
-	function positionCharacterInDom(c: Character): void {
-		// This line 
-	 	// 	1) gets the row we are in, then 
-		// 	2) finds the cell in that row, then 
-		// 	3) makes that a jquery object
-		var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z),
-			insert = ''; //this is the html we will insert
-
-		insert = '<span class="character" id="' + c._id + '"">';
-		insert += c.name;
-		insert += '</span>';
-
-		$(insert).appendTo($cell);
 	}
 
 	/**
 	 * Very simple removal of character from the DOM
 	 * the characters _id was used in creating the DOM element
 	 */
-	function clearCharacterInDom(c: Character) {
+	function clearCharacterInDom(c: Character): void {
 		$('#' + c._id).remove();
 	}
 
@@ -196,7 +191,7 @@ module UI {
 	 * @param {Character} agent   The actor
 	 * @param {Character} patient the target
 	 */
-	function showEffectStats(effect, agent: Character, patient: Character) {
+	function showEffectStats(effect, agent: Character, patient: Character): void {
 		var $actionView = $('#action-effects-view'),
 			$agentName = $actionView.find('.agent-name'),
 			$aHealthChange = $actionView.find('.agent-health-change'),
@@ -435,5 +430,15 @@ module UI {
 			showAttackGrid();
 			turnMode = 'attack';
 		}
+	}
+
+	/**
+	 * Display the victory message
+	 */
+	export function displayVictor(team1Alive: boolean, team2Alive: boolean): void {
+		if (team1Alive && !team2Alive)
+			$('#victory-message h1').text('Team 1 Wins!');
+		else if (team2Alive && !team1Alive)
+			$('#victory-message h1').text('Team 2 Wins!');
 	}
 }

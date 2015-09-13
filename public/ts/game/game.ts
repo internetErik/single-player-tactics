@@ -74,8 +74,6 @@ module Game {
 				this.characters.push(new Character(character));
 			}).bind(this));
 
-			console.dir(this.characters);
-
 			//basicMap and characters are hardcoded data
 			UI.initGameUI(basicMap, this.characters);
 		}

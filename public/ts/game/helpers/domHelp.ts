@@ -8,12 +8,12 @@ module DomHelp {
 	 * @param {number} y coordinate
 	 * @param {number} z coordinate
 	 */
-	export function getMapCell($rows, x: number, y: number, z: number) {
+	export function getMapCell($rows: JQuery, x: number, y: number, z: number): JQuery {
 		var $row = $rows.filter('[data-y=' + y + '][data-z=' + z + ']');
 		if ($row.length > 0)
-			return $($row.children('.map-cell[data-x=' + x + ']'));
+			return $row.children('.map-cell[data-x=' + x + ']');
 		else
-			console.error("tried to look up spot on map that doesn't exist.");
+			console.error("tried to look up spot on map that doesn't exist. (" + x + ", " + y + ", " + z +")");
 	}
 
 	/**
@@ -22,7 +22,7 @@ module DomHelp {
 	 * @param  {jQuery object}  $cell the cell that we are checking - may be null
 	 * @return {boolean}       True means that this is a safe cell to move to
 	 */
-	export function moveableMapCell($cell):boolean {
+	export function moveableMapCell($cell: JQuery):boolean {
 		//if this position is illegal, or there is someone there return false
 		if (!$cell || $cell.length === 0)
 			return false;
@@ -44,7 +44,7 @@ module DomHelp {
 	 * @param  {[type]}  $cell [description]
 	 * @return {boolean}       [description]
 	 */
-	export function attackableMapCell($cell):boolean {
+	export function attackableMapCell($cell: JQuery): boolean {
 		//does the cell exist?
 		if(!$cell || $cell.length === 0)
 			return false;

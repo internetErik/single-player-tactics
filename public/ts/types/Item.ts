@@ -29,9 +29,10 @@ class Weapon extends Item {
 	weaponType: WeaponType;
 
 	damageType: DamageType;
+
 	rangeType: RangeType;
 
-	effect: any; //value, function or object
+	effect: Effect; //value, function or object
 
 	range: any; //value, function or object
 
@@ -39,10 +40,11 @@ class Weapon extends Item {
 
 	constructor(item) {
 		super(item._id, item.name, item.itemType);
+		
 		this.weaponType = item.weaponType;
 		this.damageType = item.damageType;
 		this.rangeType = item.rangeType;
-		this.effect = item.effect;
+		this.effect = new Effect(item.effect);
 		this.range = item.range;
 		this.areaOfEffect = item.areaOfEffect;
 	}
