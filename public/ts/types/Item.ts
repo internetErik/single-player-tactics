@@ -32,7 +32,7 @@ class Weapon extends Item {
 
 	rangeType: RangeType;
 
-	effect: Effect; //value, function or object
+	effect: (agent: Character, patient: Character) => any; //value, function or object
 
 	range: any; //value, function or object
 
@@ -44,7 +44,7 @@ class Weapon extends Item {
 		this.weaponType = item.weaponType;
 		this.damageType = item.damageType;
 		this.rangeType = item.rangeType;
-		this.effect = new Effect(item.effect);
+		this.effect = EffectHelper.getEffect(item.effect);
 		this.range = item.range;
 		this.areaOfEffect = item.areaOfEffect;
 	}

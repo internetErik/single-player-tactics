@@ -1,4 +1,4 @@
-module EntityHelp {
+module EntityHelper {
 
 	/**
 	 * Advance all things that have a turn according to their speed.

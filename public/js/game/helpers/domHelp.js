@@ -1,5 +1,5 @@
-var DomHelp;
-(function (DomHelp) {
+var DomHelper;
+(function (DomHelper) {
     /**
      * given an x and y position, get the cell on the map
      *
@@ -15,7 +15,7 @@ var DomHelp;
         else
             console.error("tried to look up spot on map that doesn't exist. (" + x + ", " + y + ", " + z + ")");
     }
-    DomHelp.getMapCell = getMapCell;
+    DomHelper.getMapCell = getMapCell;
     /**
      * This checks to see if a cell is uninhabited and exists
      *
@@ -34,7 +34,7 @@ var DomHelp;
             return false;
         return true;
     }
-    DomHelp.moveableMapCell = moveableMapCell;
+    DomHelper.moveableMapCell = moveableMapCell;
     /**
      * Determines if a cell is a valid target
      *
@@ -50,5 +50,5 @@ var DomHelp;
             return false;
         return true;
     }
-    DomHelp.attackableMapCell = attackableMapCell;
-})(DomHelp || (DomHelp = {}));
+    DomHelper.attackableMapCell = attackableMapCell;
+})(DomHelper || (DomHelper = {}));

@@ -1,6 +1,3 @@
-class Map {
-	size: Object;
-}
 
 var basicMap = {
 	name: 'The Scary Dungeon',
@@ -19,7 +16,7 @@ var basicMap = {
 		[{
 			_id: '1',
 			ground: 'stone',
-			trap: false,
+			trap: false
 		},{},{},{},{},{},{},{},{},{}],
 		//y===1
 		[{},{},{},{},{},{},{},{},{},{}],

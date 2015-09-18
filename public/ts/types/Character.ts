@@ -26,7 +26,7 @@ class Character {
 	position: CharacterPosition;
 	
 	//the status effects influenced by
-	affected: Effect[];
+	affected: any[];
 	
 	equipment: CharacterEquipment;
 
@@ -59,6 +59,39 @@ class Character {
 		this.equipment = new CharacterEquipment(c.equipment);
 
 		this.actions = new CharacterActions();
+
+	}
+
+	getAttackEffect()
+		:(agent: Character, patient: Character) => any {
+		var rightWeapon = false,
+			leftWeapon = false,
+			rfn,
+			lfn; 
+
+			if(this.equipment.rightHand){
+				rightWeapon = cmpEnum(this.equipment.rightHand.itemType, ItemType.weapon, ItemType),
+				rfn = this.equipment.rightHand.effect;
+			}
+			
+			if(this.equipment.leftHand){
+				leftWeapon = cmpEnum(this.equipment.leftHand.itemType, ItemType.weapon, ItemType);
+				lfn = this.equipment.leftHand.effect;
+			}
+
+			if (rightWeapon && leftWeapon)
+				return function(agent: Character, patient: Character) {
+					return rfn() + lfn(); 
+				}
+			else if (rightWeapon)
+				return rfn;
+			else if (leftWeapon)
+				return lfn;
+			else
+				return function(agent: Character, patient: Character) {
+					return -1 * (agent.cstat.pa + roll(1, 4));
+				}
+
 
 	}
 }

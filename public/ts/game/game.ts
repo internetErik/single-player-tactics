@@ -3,9 +3,10 @@
 /// <reference path="../data/maps/map.ts" />
 /// <reference path="../data/objects/items.ts" />
 /// <reference path="../data/characters/characters.ts" />
-/// <reference path="helpers/domHelp.ts" />
-/// <reference path="helpers/entityHelp.ts" />
-/// <reference path="helpers/gameHelp.ts" />
+/// <reference path="helpers/EffectHelper.ts" />
+/// <reference path="helpers/DomHelper.ts" />
+/// <reference path="helpers/EntityHelper.ts" />
+/// <reference path="helpers/GameHelper.ts" />
 /// <reference path="ui/ui.ts" />
 
 /**
@@ -46,7 +47,7 @@ module Game {
 	 * These not used yet.  Neet to be refactored in
 	 */
 	var activeTurn;
-	var map: Map;
+	var map: any[];
 	//end unused fields
 
 	class Game {
@@ -69,12 +70,10 @@ module Game {
 
 			//extend character objects with getters
 			// When characters are represented by a class we won't do this
-			characters.forEach((function(character) {
-				//init Character objects from characters data
-				this.characters.push(new Character(character));
-			}).bind(this));
+			characters.forEach((character) =>
+				this.characters.push(new Character(character))
+			);
 
-			//basicMap and characters are hardcoded data
 			UI.initGameUI(basicMap, this.characters);
 		}
 
@@ -84,7 +83,7 @@ module Game {
 		 * This is the function that is called each time for the game loop
 		 * I am using a setTimeout instead of a while loop
 		 */
-		gameLoop(): void {
+		gameLoop = (): void => {
 			//
 			// When there is a current move, we will just fall 
 			// through this function, that means that if the user 
@@ -96,17 +95,17 @@ module Game {
 			//this loop runs until we assign something to the
 			//character/event with the current turn
 			while (!currentTurn)
-				currentTurn = EntityHelp.advanceTime(this.characters);
+				currentTurn = EntityHelper.advanceTime(this.characters);
 
 			if (currentTurn)
-				this.gameOn = this.isGameOn(this.characters);
+				this.gameOn = this.isGameOn();
 					
 			//Put current characters name over the menu
 			$('.active-character').text(currentTurn.name);		
 					
 			//if game still call gameLoop again
 			if (this.gameOn)
-				setTimeout(this.gameLoop.bind(this), 1000);
+				setTimeout(this.gameLoop, 1000);
 			else
 				UI.displayVictor(this.team1Alive, this.team2Alive);
 		}
@@ -121,18 +120,17 @@ module Game {
 		 * 
 		 * @return {boolean} the new value of gameOn
 		 */
-		isGameOn(characters: Character[]): boolean {
-			var team1Alive = false;
-			var team2Alive = false;
-
-			characters.forEach(function(c) {
+		isGameOn = (): boolean => {
+			this.team1Alive = false;
+			this.team2Alive = false;
+			this.characters.forEach((c) => {
 				if (c.cstat.hp > 0)
 					(c.team === 1) ?
-						team1Alive = true :
-						team2Alive = true;
+						this.team1Alive = true :
+						this.team2Alive = true;
 			});
 
-			return (team1Alive && team2Alive);
+			return (this.team1Alive && this.team2Alive);
 		}
 	}
 

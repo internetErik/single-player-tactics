@@ -1,5 +1,5 @@
-var EntityHelp;
-(function (EntityHelp) {
+var EntityHelper;
+(function (EntityHelper) {
     /**
      * Advance all things that have a turn according to their speed.
      * If anyone gets turn >= 100, set currentTurn to them
@@ -33,7 +33,7 @@ var EntityHelp;
         }
         return currentTurn;
     }
-    EntityHelp.advanceTime = advanceTime;
+    EntityHelper.advanceTime = advanceTime;
     /**
      * Returns the change in health from an effect
      * @param {[type]} effect  the action being performed
@@ -43,7 +43,7 @@ var EntityHelp;
     function calculateHealthChange(effect, agent, patient) {
         return effect(agent, patient);
     }
-    EntityHelp.calculateHealthChange = calculateHealthChange;
+    EntityHelper.calculateHealthChange = calculateHealthChange;
     /**
      * Returns the remaining hp of characters
      * doesn't allow a result less than 0
@@ -57,5 +57,5 @@ var EntityHelp;
         //don't allow hp to reduce below 0
         return (hp >= 0) ? hp : 0;
     }
-    EntityHelp.calculateRemainingHp = calculateRemainingHp;
-})(EntityHelp || (EntityHelp = {}));
+    EntityHelper.calculateRemainingHp = calculateRemainingHp;
+})(EntityHelper || (EntityHelper = {}));

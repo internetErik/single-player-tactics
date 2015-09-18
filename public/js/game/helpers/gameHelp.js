@@ -1,5 +1,5 @@
-var GameHelp;
-(function (GameHelp) {
+var GameHelper;
+(function (GameHelper) {
     /**
      * Checks to see if the player has acted and moved
      *
@@ -13,13 +13,13 @@ var GameHelp;
         //	I don't like this
         return (moved && acted);
     }
-    GameHelp.turnOver = turnOver;
+    GameHelper.turnOver = turnOver;
     //psuedo code
     function attackableSpace(agent, action, map) {
         var x, y, z;
         //for each position in the map check if it's a valid target
     }
-    GameHelp.attackableSpace = attackableSpace;
+    GameHelper.attackableSpace = attackableSpace;
     function roll(dice, sides) {
         return (dice === 0 || sides === 0) ?
             0 :
@@ -31,5 +31,5 @@ var GameHelp;
                 return p + c;
             }, 0);
     }
-    GameHelp.roll = roll;
-})(GameHelp || (GameHelp = {}));
+    GameHelper.roll = roll;
+})(GameHelper || (GameHelper = {}));

@@ -1,4 +1,4 @@
-module GameHelp {
+module GameHelper {
 
 	/**
 	 * Checks to see if the player has acted and moved

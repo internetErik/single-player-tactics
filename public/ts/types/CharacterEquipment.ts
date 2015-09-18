@@ -19,27 +19,25 @@ class CharacterEquipment {
 				
 				let item = Item.getItemById(equipment[key]);
 
-				//we are doing this so we can compare without getting an typescript error
-				let location: string = EquipableLocation[EquipableLocation[key]];
-
 				if (item !== null) {
-					if (location === 'rightHand')
+					// if (location === 'rightHand')
+					if(cmpEnum(key, EquipableLocation.rightHand, EquipableLocation))
 						this.rightHand = (CharacterEquipment.isWeapon(item)) ?
 							new Weapon(item) :
 							new Shield(item);
 
-					if (location === 'leftHand')
+					if (cmpEnum(key, EquipableLocation.leftHand, EquipableLocation))
 						this.leftHand = (CharacterEquipment.isWeapon(item)) ?
 							new Weapon(item) :
 							new Shield(item);
 
-					if (location === 'head')
+					if (cmpEnum(key, EquipableLocation.head, EquipableLocation))
 						this.head = new Helmet(item);
 
-					if (location === 'body')
+					if (cmpEnum(key, EquipableLocation.body, EquipableLocation))
 						this.body = new Armor(item);
 
-					if (location === 'accessory')
+					if (cmpEnum(key, EquipableLocation.accessory, EquipableLocation))
 						this.accessory = new Accessory(item);
 				}
 			}

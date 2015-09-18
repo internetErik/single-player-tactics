@@ -3,9 +3,10 @@
 /// <reference path="../data/maps/map.ts" />
 /// <reference path="../data/objects/items.ts" />
 /// <reference path="../data/characters/characters.ts" />
-/// <reference path="helpers/domHelp.ts" />
-/// <reference path="helpers/entityHelp.ts" />
-/// <reference path="helpers/gameHelp.ts" />
+/// <reference path="helpers/EffectHelper.ts" />
+/// <reference path="helpers/DomHelper.ts" />
+/// <reference path="helpers/EntityHelper.ts" />
+/// <reference path="helpers/GameHelper.ts" />
 /// <reference path="ui/ui.ts" />
 /**
  * This represents the character that is currently active
@@ -45,6 +46,53 @@ var Game;
     //end unused fields
     var Game = (function () {
         function Game() {
+            var _this = this;
+            /**
+             * This is the function that is called each time for the game loop
+             * I am using a setTimeout instead of a while loop
+             */
+            this.gameLoop = function () {
+                //
+                // When there is a current move, we will just fall 
+                // through this function, that means that if the user 
+                // is putzing around and entering in and out of menus 
+                // as long as they don't end their turn, it will
+                // still have their turn 
+                //
+                //this loop runs until we assign something to the
+                //character/event with the current turn
+                while (!currentTurn)
+                    currentTurn = EntityHelper.advanceTime(_this.characters);
+                if (currentTurn)
+                    _this.gameOn = _this.isGameOn();
+                //Put current characters name over the menu
+                $('.active-character').text(currentTurn.name);
+                //if game still call gameLoop again
+                if (_this.gameOn)
+                    setTimeout(_this.gameLoop, 1000);
+                else
+                    UI.displayVictor(_this.team1Alive, _this.team2Alive);
+            };
+            /**
+             * Decides if the game is still going
+             *
+             * set both teams to dead (teamXAlive = false)
+             * loop through characters.
+             * 	if they are alive, set their team to true
+             *
+             * @return {boolean} the new value of gameOn
+             */
+            this.isGameOn = function () {
+                _this.team1Alive = false;
+                _this.team2Alive = false;
+                _this.characters.forEach(function (c) {
+                    if (c.cstat.hp > 0)
+                        (c.team === 1) ?
+                            _this.team1Alive = true :
+                            _this.team2Alive = true;
+                });
+                return (_this.team1Alive && _this.team2Alive);
+            };
             // See if we have already tried to initialize this.  
             // It's impossible to do, really, without code modification, so this is more of a note for future developers
             if (_instance)
@@ -56,59 +104,11 @@ var Game;
             this.characters = [];
             //extend character objects with getters
             // When characters are represented by a class we won't do this
-            characters.forEach((function (character) {
-                //init Character objects from characters data
-                this.characters.push(new Character(character));
-            }).bind(this));
-            //basicMap and characters are hardcoded data
+            characters.forEach(function (character) {
+                return _this.characters.push(new Character(character));
+            });
             UI.initGameUI(basicMap, this.characters);
         }
-        /**
-         * This is the function that is called each time for the game loop
-         * I am using a setTimeout instead of a while loop
-         */
-        Game.prototype.gameLoop = function () {
-            //
-            // When there is a current move, we will just fall 
-            // through this function, that means that if the user 
-            // is putzing around and entering in and out of menus 
-            // as long as they don't end their turn, it will
-            // still have their turn 
-            //
-            //this loop runs until we assign something to the
-            //character/event with the current turn
-            while (!currentTurn)
-                currentTurn = EntityHelp.advanceTime(this.characters);
-            if (currentTurn)
-                this.gameOn = this.isGameOn(this.characters);
-            //Put current characters name over the menu
-            $('.active-character').text(currentTurn.name);
-            //if game still call gameLoop again
-            if (this.gameOn)
-                setTimeout(this.gameLoop.bind(this), 1000);
-            else
-                UI.displayVictor(this.team1Alive, this.team2Alive);
-        };
-        /**
-         * Decides if the game is still going
-         *
-         * set both teams to dead (teamXAlive = false)
-         * loop through characters.
-         * 	if they are alive, set their team to true
-         *
-         * @return {boolean} the new value of gameOn
-         */
-        Game.prototype.isGameOn = function (characters) {
-            var team1Alive = false;
-            var team2Alive = false;
-            characters.forEach(function (c) {
-                if (c.cstat.hp > 0)
-                    (c.team === 1) ?
-                        team1Alive = true :
-                        team2Alive = true;
-            });
-            return (team1Alive && team2Alive);
-        };
         return Game;
     })();
     /**

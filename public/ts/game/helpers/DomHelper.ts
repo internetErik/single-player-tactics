@@ -1,4 +1,4 @@
-module DomHelp {
+module DomHelper {
 
 	/**
 	 * given an x and y position, get the cell on the map
@@ -9,11 +9,11 @@ module DomHelp {
 	 * @param {number} z coordinate
 	 */
 	export function getMapCell($rows: JQuery, x: number, y: number, z: number): JQuery {
-		var $row = $rows.filter('[data-y=' + y + '][data-z=' + z + ']');
+		var $row = $rows.filter(`[data-y=${y}][data-z=${z}]`);
 		if ($row.length > 0)
-			return $row.children('.map-cell[data-x=' + x + ']');
+			return $row.children(`.map-cell[data-x=${x}]`);
 		else
-			console.error("tried to look up spot on map that doesn't exist. (" + x + ", " + y + ", " + z +")");
+			console.error(`tried to look up spot on map that doesn't exist. (${x}, ${y}, ${z})`);
 	}
 
 	/**

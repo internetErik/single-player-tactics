@@ -2,8 +2,8 @@ module UI {
 	/****************************************
 	 * EXPORTED
 	 *
-	 * function initGameUI
-	 * function displayVictor
+	 * function initGameUI - Game kicks off ui
+	 * function displayVictor - gameLoop determines if there is a victor and calls this
 	 * 
 	 ****************************************/
 
@@ -78,11 +78,11 @@ module UI {
 			
 		for (k = 0; k <= map.size.z; k += 1) {
 			//insert a new level
-			$('<div class="map-level" data-z="' + k + '"></div>').appendTo($map);
+			$(`<div class="map-level" data-z="${k}"></div>`).appendTo($map);
 			
 			//if this level is not empty generate generate it
 			if (map['z' + k].length > 0)
-				$(generateLevel(map['z' + k], k)).appendTo('.map-level[data-z=' + k + ']');
+				$(generateLevel(map['z' + k], k)).appendTo(`.map-level[data-z=${k}]`);
 		}
 	}
 
@@ -100,10 +100,10 @@ module UI {
 
 		rows.forEach(function(row, i) {
 			if (row.length > 0) {
-				innerLevel += '<div class="map-row" data-y="' + i + '" data-z="' + level + '">';
+				innerLevel += `<div class="map-row" data-y="${i}" data-z="${level}">`;
 				innerLevel += row.reduce(function(p, c, j) {
 					return (c._id) ?
-						p + '<div class="map-cell" style="top:' + sideWidth * i + 'px; left:' + sideWidth * j + 'px;" data-x="' + j + '" data-y="' + i + '" data-z="' + level + '"></div>'
+						p + `<div class="map-cell" style="top: ${sideWidth * i}px; left: ${sideWidth * j}px;" data-x="${j}" data-y="${i}" data-z="${level}"></div>`
 						: p;
 				}, '');
 				innerLevel += "</div>";
@@ -124,7 +124,6 @@ module UI {
 	 * This function loads ALL of the characters into the DOM
 	 */
 	function loadCharactersInDOM(): void {
-		//currently using dummy data for characters
 		characters.forEach(positionCharacterInDom);
 	}
 
@@ -140,12 +139,8 @@ module UI {
 		// 	1) gets the row we are in, then 
 		// 	2) finds the cell in that row, then 
 		// 	3) makes that a jquery object
-		var $cell = DomHelp.getMapCell($rows, c.position.x, c.position.y, c.position.z),
-			insert = ''; //this is the html we will insert
-
-		insert = '<span class="character" id="' + c._id + '"">';
-		insert += c.name;
-		insert += '</span>';
+		var $cell = DomHelper.getMapCell($rows, c.position.x, c.position.y, c.position.z),
+			insert = `<span class="character" id="${c._id}">${c.name}</span>`;
 
 		$(insert).appendTo($cell);
 	}
@@ -197,18 +192,18 @@ module UI {
 			$aHealthChange = $actionView.find('.agent-health-change'),
 			$patientName = $actionView.find('.patient-name'),
 			$pHealthChange = $actionView.find('.patient-health-change'),
-			aDamage = EntityHelp.calculateHealthChange(effect, agent, patient),
+			aDamage = EntityHelper.calculateHealthChange(effect, agent, patient),
 			pHealth,
 			pNewHealth;
 		
 		if (patient) {
 			pHealth = patient.cstat.hp;
-			pNewHealth = EntityHelp.calculateRemainingHp(effect, agent, patient);
+			pNewHealth = EntityHelper.calculateRemainingHp(effect, agent, patient);
 
 			$agentName.text(agent.name);
 			$patientName.text(patient.name);
 
-			$pHealthChange.text(pHealth + 'hp ' + aDamage + ' -> ' + pNewHealth + 'hp');
+			$pHealthChange.text(`${pHealth}hp ${aDamage} -> ${pNewHealth}hp`);
 		}
 		else {
 			$agentName.text(agent.name);
@@ -292,10 +287,10 @@ module UI {
 				z = this.getAttribute('data-z'),
 				$cell;
 
-			$cell = DomHelp.getMapCell($rows, x, y, z);
+			$cell = DomHelper.getMapCell($rows, x, y, z);
 			
 			//selected position may fail
-			if(DomHelp.moveableMapCell($cell)) {
+			if(DomHelper.moveableMapCell($cell)) {
 				currentTurn.position.x = x;
 				currentTurn.position.y = y;
 				currentTurn.position.z = z;
@@ -304,7 +299,7 @@ module UI {
 				clearMoveGrid();
 				moved = true;
 
-				if(GameHelp.turnOver())
+				if(GameHelper.turnOver())
 					clearCurrentTurn();
 			}
 		}
@@ -322,13 +317,13 @@ module UI {
 				$cell,
 				patientId,
 				patient, //will be the target of action 
-				effect = <Weapon>(currentTurn.equipment.rightHand).effect;
+				effect = currentTurn.getAttackEffect();
 			
 			//get effected cell
-			$cell = DomHelp.getMapCell($rows, x, y, z);
+			$cell = DomHelper.getMapCell($rows, x, y, z);
 
 			//selected position may fail
-			if(DomHelp.attackableMapCell($cell)) {
+			if(DomHelper.attackableMapCell($cell)) {
 
 				//get target character
 				//ToDo: must support multiple
@@ -346,7 +341,7 @@ module UI {
 						clearAttackGrid();
 						acted = true;
 
-						if (GameHelp.turnOver())
+						if (GameHelper.turnOver())
 							clearCurrentTurn();
 					}
 
@@ -367,7 +362,7 @@ module UI {
 	 */
 	function performAction(effect, agent: Character, patient: Character): void {
 		if (patient)
-			patient.cstat.hp = EntityHelp.calculateRemainingHp(effect, agent, patient);
+			patient.cstat.hp = EntityHelper.calculateRemainingHp(effect, agent, patient);
 	}
 
 	/**

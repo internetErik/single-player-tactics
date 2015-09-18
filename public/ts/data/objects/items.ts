@@ -24,7 +24,7 @@ var items = [
 		damageType: DamageType.physical,
 	 	rangeType: RangeType.lineOfSight,
 	 	effect: function(agent, patient){
-	 		return -1*(agent.stats.state.pa + roll(1,10));
+	 		return -1*(agent.cstat.pa + roll(1,10));
 	 	},
 	 	range: {
 	 		min: 1,
@@ -45,7 +45,7 @@ var items = [
 		damageType: DamageType.physical,
 		rangeType: RangeType.lineOfSight,
 		effect: function(agent, patient){
-	 		return -1*(agent.stats.state.pa + roll(1,10));
+	 		return -1*(agent.cstat.pa + roll(1,10));
 	 	},
 		range: {
 		  min: 1,
@@ -66,7 +66,7 @@ var items = [
 		rangeType: RangeType.arc,
 		hands: 2,
 		effect: function(agent, patient){
-		 		return -1*(agent.stats.state.pa + roll(1,8));
+		 		return -1*(agent.cstat.pa + roll(1,8));
 		},
 		range: function(o, t) {
 			//o(=origin) and t(=target) are {x:number,y:number,z:number}
