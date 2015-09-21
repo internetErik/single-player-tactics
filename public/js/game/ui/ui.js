@@ -17,14 +17,16 @@ var UI;
      */
     var $rows;
     var characters = [];
+    var map;
     /**
      * Initializes the user interface
      *
      * @param {Map} map        the map we are loading
      * @param {Array<Character>} characters All the characters being used
      */
-    function initGameUI(map, chars) {
+    function initGameUI(m, chars) {
         characters = chars;
+        map = m;
         //initialize game only after everything is ready
         $(document).ready(function () {
             //init global map
@@ -61,14 +63,11 @@ var UI;
      * This function loads the map into the DOM
      */
     function loadMapInDOM(map) {
-        var k;
-        for (k = 0; k <= map.size.z; k += 1) {
+        map.grid.forEach(function (rows, level) {
             //insert a new level
-            $("<div class=\"map-level\" data-z=\"" + k + "\"></div>").appendTo($map);
-            //if this level is not empty generate generate it
-            if (map['z' + k].length > 0)
-                $(generateLevel(map['z' + k], k)).appendTo(".map-level[data-z=" + k + "]");
-        }
+            $("<div class=\"map-level\" data-z=\"" + level + "\"></div>").appendTo($map);
+            $(generateLevel(rows, level)).appendTo(".map-level[data-z=" + level + "]");
+        });
     }
     /**
      * Given that this level isn't empty, create the html for it
@@ -184,8 +183,25 @@ var UI;
      * Should calculate this, but now just effects entire area.
      */
     function showMoveGrid() {
-        //we could calculate, but instead we'll just make the whole map moveable
+        var graph = buildActionGraph();
         $('.map-cell').addClass('map-cell_moveable');
+    }
+    /**
+     * buildActionGraph
+     *
+     * @return {any[]} items in the graph that are within basic range
+     */
+    function buildActionGraph() {
+        //in combination with the Direction enum, we have an easy way to move around the grid
+        var directions = [[0, -1], [1, 0], [0, 1], [-1, 0]]; //N, S, E, W
+        if (currentTurn) {
+            var x = currentTurn.position.x, y = currentTurn.position.y, z = currentTurn.position.z;
+            if (!map.grid[z][y][x] || !map.grid[z][y][x]._id) {
+                console.error("CurrentTurn is on a spot not on the map");
+                return [];
+            }
+        }
+        return [];
     }
     /**
      * This function is called to stop movement action.

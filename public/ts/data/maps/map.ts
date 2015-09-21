@@ -9,7 +9,8 @@ var basicMap = {
 		z: 2
 	},
 	//depth of 0
-	z0: [
+	grid: [ 
+		[
 		//order of array determines x,y coordinates
 		// an empty object will be drawn as a div that isn't moveable
 		//y===0
@@ -36,9 +37,9 @@ var basicMap = {
 		[{},{},{},{},{},{},{},{},{},{}],
 		//y===9
 		[{},{},{},{},{},{},{},{},{},{}],
-	],
-	z1: [], //empty array means nothing at this height
-	z2: [
+		],
+		[], //empty array means nothing at this height
+		[
 		//order of array determines x,y coordinates
 		// an empty object will be drawn as a div that isn't moveable
 		//y===0
@@ -456,6 +457,7 @@ var basicMap = {
 			_id: '1',
 			ground: 'stone',
 			trap: false,
-		}],
+		}]
+		]
 	]
 };
