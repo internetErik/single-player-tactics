@@ -1,4 +1,3 @@
-/// <reference path="CharacterPosition.ts" />
 /// <reference path="CharacterStatus.ts" />
 /// <reference path="CharacterEquipment.ts" />
 /// <reference path="CharacterActions.ts" />
@@ -23,7 +22,7 @@ class Character {
 	cstat: CharacterStatus;
 
 	//location on map, and direction facing
-	position: CharacterPosition;
+	position: Topos;
 	
 	//the status effects influenced by
 	affected: any[];
@@ -54,7 +53,7 @@ class Character {
 		this.cstat = new CharacterStatus(c.stats.state);
 
 		this.position = 
-			new CharacterPosition(tmpPos.x, tmpPos.y, tmpPos.z, Direction.north);
+			new Topos(tmpPos.x, tmpPos.y, tmpPos.z, Direction.north);
 
 		this.equipment = new CharacterEquipment(c.equipment);
 

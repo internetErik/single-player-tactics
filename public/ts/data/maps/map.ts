@@ -3,10 +3,10 @@ var basicMap = {
 	name: 'The Scary Dungeon',
 	//specify map size generically
 	size: {
-		//all of these are 0 based
-		x: 9,
-		y: 9,
-		z: 2
+		//all of these are 1 based
+		x: 10,
+		y: 10,
+		z: 3
 	},
 	//depth of 0
 	grid: [ 

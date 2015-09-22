@@ -1,4 +1,6 @@
-class CharacterPosition {
+//Topos = greek for place
+//Wish I could call it location or position, but these conflict with typescript definitions
+class Topos {
 	x: number;
 	y: number;
 	z: number;

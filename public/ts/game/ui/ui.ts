@@ -29,7 +29,7 @@ module UI {
 	 * @param {Map} map        the map we are loading
 	 * @param {Array<Character>} characters All the characters being used
 	 */
-	export function initGameUI(m, chars: Character[]) {
+	export function initGameUI(m, chars: Character[]): void {
 		characters = chars;
 		map = m;
 
@@ -231,7 +231,11 @@ module UI {
 	 */
 	function showMoveGrid(): void {
 		var graph = buildActionGraph();
-		$('.map-cell').addClass('map-cell_moveable');
+
+		graph.forEach(function(i){
+			$(`.map-cell[data-x=${i.x}][data-y=${i.y}][data-z=${i.z}]`)
+				.addClass('map-cell_moveable');
+		});
 	}
 
 	/**
@@ -241,7 +245,7 @@ module UI {
 	 */
 	function buildActionGraph(): any[] {
 		//in combination with the Direction enum, we have an easy way to move around the grid
-		var directions = [[0, -1], [1, 0], [0, 1], [-1, 0]]; //N, S, E, W
+		var spots = [];
 
 		if(currentTurn) {
 			let x = currentTurn.position.x,
@@ -253,11 +257,92 @@ module UI {
 				return [];
 			}
 
+			//absolutely no intended nazi symbolism in this algorithm
+			spots = spots.concat(traverseHorizontalFirst(1, 1, currentTurn.position, currentTurn.cstat.move))
+					.concat(traverseVerticalFirst(-1, 1, currentTurn.position, currentTurn.cstat.move))
+					.concat(traverseHorizontalFirst(-1, -1, currentTurn.position, currentTurn.cstat.move))
+					.concat(traverseVerticalFirst(1, -1, currentTurn.position, currentTurn.cstat.move))
 
-			//map is an object that has levels
 
 		}
-		return [];
+
+		return spots;
+	}
+
+	function traverseHorizontalFirst(hor: number, vert: number, p: Topos, move: number) {
+		//create accumulator
+		var spots = [];
+
+		//handle base cases
+		if (move >= 0 && p.x + hor >= 0 && p.x + hor < map.size.x) {
+			p = new Topos(p.x + hor, p.y, p.z, p.dir);
+
+			spots.push(p);
+
+			map.grid.forEach(function(level, z) {
+				if (level.length > 0 && level[p.y][p.x]._id)
+					spots = spots.concat(traverseHorizontalFirst(hor, vert, new Topos(p.x, p.y, z, p.dir), move - 1))
+						.concat(traverseVertical(vert, new Topos(p.x, p.y, z, p.dir), move - 1));
+			});
+		}
+
+		return spots;
+	}
+
+	function traverseVerticalFirst(hor: number, vert: number, p: Topos, move: number) {
+		//create accumulator
+		var spots = [];
+
+		//handle base cases
+		if (move >= 0 && p.y + vert >= 0 && p.y + vert < map.size.y) {
+			p = new Topos(p.x, p.y + vert, p.z, p.dir);
+
+			spots.push(p);
+
+			map.grid.forEach(function(level, z) {
+				if (level.length > 0 && level[p.y][p.x]._id)
+					spots = spots.concat(traverseVerticalFirst(hor, vert, new Topos(p.x, p.y, z, p.dir), move - 1))
+						.concat(traverseHorizontal(hor, new Topos(p.x, p.y, z, p.dir), move - 1));
+			});
+		}
+
+		return spots;
+	}
+
+	function traverseVertical(vert: number, p: Topos, move: number) {
+		//create accumulator
+		var spots = [];
+
+		//handle base cases
+		if (move >= 0 && p.y + vert >= 0 && p.y + vert < map.size.y) {
+			p = new Topos(p.x, p.y + vert, p.z, p.dir);
+			spots.push(p);
+
+			map.grid.forEach(function(level, z) {
+				if (level.length > 0 && level[p.y][p.x]._id)
+					spots = spots.concat(traverseVertical(vert, new Topos(p.x, p.y, z, p.dir), move - 1));
+			});
+		}
+
+		return spots;
+	}
+
+	function traverseHorizontal(hor: number, p: Topos, move: number) {
+		//create accumulator
+		var spots = [];
+
+		//handle base cases
+		if (move >= 0 && p.x + hor >= 0 && p.x + hor < map.size.x) {
+			p = new Topos(p.x + hor, p.y, p.z, p.dir);
+			spots.push(p);
+
+			map.grid.forEach(function(level, z) {
+				if (level.length > 0 && level[p.y][p.x]._id)
+					spots = spots.concat(traverseHorizontal(hor, new Topos(p.x, p.y, z, p.dir), move - 1));
+			});
+		}
+
+		return spots;
 	}
 
 	/**
