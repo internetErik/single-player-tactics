@@ -183,8 +183,8 @@ var UI;
      * Should calculate this, but now just effects entire area.
      */
     function showMoveGrid() {
-        var graph = buildActionGraph();
-        graph.forEach(function (i) {
+        var spots = buildActionGraph(currentTurn.position, currentTurn.cstat.move);
+        spots.forEach(function (i) {
             $(".map-cell[data-x=" + i.x + "][data-y=" + i.y + "][data-z=" + i.z + "]")
                 .addClass('map-cell_moveable');
         });
@@ -194,78 +194,69 @@ var UI;
      *
      * @return {any[]} items in the graph that are within basic range
      */
-    function buildActionGraph() {
+    function buildActionGraph(position, range) {
         //in combination with the Direction enum, we have an easy way to move around the grid
-        var spots = [];
-        if (currentTurn) {
-            var x = currentTurn.position.x, y = currentTurn.position.y, z = currentTurn.position.z;
-            if (!map.grid[z][y][x] || !map.grid[z][y][x]._id) {
-                console.error("CurrentTurn is on a spot not on the map");
-                return [];
+        var spots = [], x = position.x, y = position.y, z = position.z;
+        if (!map.grid[z][y][x] || !map.grid[z][y][x]._id) {
+            console.error("Start position is not on the map");
+            return [];
+        }
+        map.grid.forEach(function (level, z) {
+            if (level.length > 0) {
+                var p = new Topos(position.x, position.y, z, position.dir);
+                //absolutely no intended nazi symbolism in this algorithm
+                spots = spots.concat(traverseHorizontalFirst(1, 1, p, range))
+                    .concat(traverseVerticalFirst(-1, 1, p, range))
+                    .concat(traverseHorizontalFirst(-1, -1, p, range))
+                    .concat(traverseVerticalFirst(1, -1, p, range));
             }
-            //absolutely no intended nazi symbolism in this algorithm
-            spots = spots.concat(traverseHorizontalFirst(1, 1, currentTurn.position, currentTurn.cstat.move))
-                .concat(traverseVerticalFirst(-1, 1, currentTurn.position, currentTurn.cstat.move))
-                .concat(traverseHorizontalFirst(-1, -1, currentTurn.position, currentTurn.cstat.move))
-                .concat(traverseVerticalFirst(1, -1, currentTurn.position, currentTurn.cstat.move));
+        });
+        return spots;
+    }
+    function traverseHorizontalFirst(hor, vert, p, range) {
+        var spots = []; //create accumulator
+        p = new Topos(p.x + hor, p.y, p.z, p.dir);
+        //handle base cases
+        if (range > 0 && p.x >= 0 && p.x < map.size.x) {
+            if (map.grid[p.z][p.y][p.x]._id)
+                spots.push(p);
+            spots = spots.concat(traverseHorizontalFirst(hor, vert, p, range - 1))
+                .concat(traverseVertical(vert, p, range - 1));
         }
         return spots;
     }
-    function traverseHorizontalFirst(hor, vert, p, move) {
-        //create accumulator
-        var spots = [];
+    function traverseVerticalFirst(hor, vert, p, range) {
+        var spots = []; //create accumulator
+        p = new Topos(p.x, p.y + vert, p.z, p.dir);
         //handle base cases
-        if (move >= 0 && p.x + hor >= 0 && p.x + hor < map.size.x) {
-            p = new Topos(p.x + hor, p.y, p.z, p.dir);
-            spots.push(p);
-            map.grid.forEach(function (level, z) {
-                if (level.length > 0 && level[p.y][p.x]._id)
-                    spots = spots.concat(traverseHorizontalFirst(hor, vert, new Topos(p.x, p.y, z, p.dir), move - 1))
-                        .concat(traverseVertical(vert, new Topos(p.x, p.y, z, p.dir), move - 1));
-            });
+        if (range > 0 && p.y >= 0 && p.y < map.size.y) {
+            if (map.grid[p.z][p.y][p.x]._id)
+                spots.push(p);
+            spots = spots.concat(traverseVerticalFirst(hor, vert, p, range - 1))
+                .concat(traverseHorizontal(hor, p, range - 1));
         }
         return spots;
     }
-    function traverseVerticalFirst(hor, vert, p, move) {
-        //create accumulator
-        var spots = [];
+    function traverseVertical(vert, p, range) {
+        var spots = []; //create accumulator
+        //update position
+        p = new Topos(p.x, p.y + vert, p.z, p.dir);
         //handle base cases
-        if (move >= 0 && p.y + vert >= 0 && p.y + vert < map.size.y) {
-            p = new Topos(p.x, p.y + vert, p.z, p.dir);
-            spots.push(p);
-            map.grid.forEach(function (level, z) {
-                if (level.length > 0 && level[p.y][p.x]._id)
-                    spots = spots.concat(traverseVerticalFirst(hor, vert, new Topos(p.x, p.y, z, p.dir), move - 1))
-                        .concat(traverseHorizontal(hor, new Topos(p.x, p.y, z, p.dir), move - 1));
-            });
+        if (range > 0 && p.y >= 0 && p.y < map.size.y) {
+            if (map.grid[p.z][p.y][p.x]._id)
+                spots.push(p);
+            spots = spots.concat(traverseVertical(vert, p, range - 1));
         }
         return spots;
     }
-    function traverseVertical(vert, p, move) {
-        //create accumulator
-        var spots = [];
+    function traverseHorizontal(hor, p, range) {
+        var spots = []; //create accumulator
+        p = new Topos(p.x + hor, p.y, p.z, p.dir);
         //handle base cases
-        if (move >= 0 && p.y + vert >= 0 && p.y + vert < map.size.y) {
-            p = new Topos(p.x, p.y + vert, p.z, p.dir);
-            spots.push(p);
-            map.grid.forEach(function (level, z) {
-                if (level.length > 0 && level[p.y][p.x]._id)
-                    spots = spots.concat(traverseVertical(vert, new Topos(p.x, p.y, z, p.dir), move - 1));
-            });
-        }
-        return spots;
-    }
-    function traverseHorizontal(hor, p, move) {
-        //create accumulator
-        var spots = [];
-        //handle base cases
-        if (move >= 0 && p.x + hor >= 0 && p.x + hor < map.size.x) {
-            p = new Topos(p.x + hor, p.y, p.z, p.dir);
-            spots.push(p);
-            map.grid.forEach(function (level, z) {
-                if (level.length > 0 && level[p.y][p.x]._id)
-                    spots = spots.concat(traverseHorizontal(hor, new Topos(p.x, p.y, z, p.dir), move - 1));
-            });
+        if (range > 0 && p.x >= 0 && p.x < map.size.x) {
+            if (map.grid[p.z][p.y][p.x]._id)
+                spots.push(p);
+            spots = spots.concat(traverseHorizontal(hor, p, range - 1));
         }
         return spots;
     }
@@ -282,8 +273,11 @@ var UI;
      * ToDo: this should be calculated.
      */
     function showAttackGrid() {
-        //we could calculate, but instead we'll just make the whole map moveable
-        $('.map-cell').addClass('map-cell_attackable');
+        var spots = buildActionGraph(currentTurn.position, currentTurn.getWeapon().range.max);
+        spots.forEach(function (i) {
+            $(".map-cell[data-x=" + i.x + "][data-y=" + i.y + "][data-z=" + i.z + "]")
+                .addClass('map-cell_attackable');
+        });
     }
     /**
      * Remove the attackable class from map cells
@@ -314,7 +308,7 @@ var UI;
         //how do I stop needing the currentTurn object?
         //we only do something if there is a character with a turn
         if (currentTurn) {
-            var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), z = this.getAttribute('data-z'), $cell;
+            var x = parseInt(this.getAttribute('data-x'), 10), y = parseInt(this.getAttribute('data-y'), 10), z = parseInt(this.getAttribute('data-z'), 10), $cell;
             $cell = DomHelper.getMapCell($rows, x, y, z);
             //selected position may fail
             if (DomHelper.moveableMapCell($cell)) {

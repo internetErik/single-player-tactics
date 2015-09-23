@@ -68,29 +68,38 @@ class Character {
 			rfn,
 			lfn; 
 
-			if(this.equipment.rightHand){
-				rightWeapon = cmpEnum(this.equipment.rightHand.itemType, ItemType.weapon, ItemType),
-				rfn = this.equipment.rightHand.effect;
+		if(this.equipment.rightHand){
+			rightWeapon = cmpEnum(this.equipment.rightHand.itemType, ItemType.weapon, ItemType),
+			rfn = this.equipment.rightHand.effect;
+		}
+		
+		if(this.equipment.leftHand){
+			leftWeapon = cmpEnum(this.equipment.leftHand.itemType, ItemType.weapon, ItemType);
+			lfn = this.equipment.leftHand.effect;
+		}
+
+		if (rightWeapon && leftWeapon)
+			return function(agent: Character, patient: Character) {
+				return rfn() + lfn(); 
 			}
-			
-			if(this.equipment.leftHand){
-				leftWeapon = cmpEnum(this.equipment.leftHand.itemType, ItemType.weapon, ItemType);
-				lfn = this.equipment.leftHand.effect;
+		else if (rightWeapon)
+			return rfn;
+		else if (leftWeapon)
+			return lfn;
+		else
+			return function(agent: Character, patient: Character) {
+				return -1 * (agent.cstat.pa + roll(1, 4));
 			}
+	}
 
-			if (rightWeapon && leftWeapon)
-				return function(agent: Character, patient: Character) {
-					return rfn() + lfn(); 
-				}
-			else if (rightWeapon)
-				return rfn;
-			else if (leftWeapon)
-				return lfn;
-			else
-				return function(agent: Character, patient: Character) {
-					return -1 * (agent.cstat.pa + roll(1, 4));
-				}
+	getWeapon() {
+		var rightWeapon = null,
+			leftWeapon = null;
 
+		if (this.equipment.rightHand && cmpEnum(this.equipment.rightHand.itemType, ItemType.weapon, ItemType))
+			return this.equipment.rightHand;
 
+		if (this.equipment.leftHand && cmpEnum(this.equipment.leftHand.itemType, ItemType.weapon, ItemType))
+			return this.equipment.leftHand;
 	}
 }
