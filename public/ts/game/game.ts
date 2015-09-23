@@ -7,6 +7,7 @@
 /// <reference path="helpers/DomHelper.ts" />
 /// <reference path="helpers/EntityHelper.ts" />
 /// <reference path="helpers/GameHelper.ts" />
+/// <reference path="helpers/MapHelper.ts" />
 /// <reference path="ui/ui.ts" />
 
 /**

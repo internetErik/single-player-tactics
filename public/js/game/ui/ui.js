@@ -183,82 +183,11 @@ var UI;
      * Should calculate this, but now just effects entire area.
      */
     function showMoveGrid() {
-        var spots = buildActionGraph(currentTurn.position, currentTurn.cstat.move);
+        var spots = MapHelper.buildBasicRange(currentTurn.position, currentTurn.cstat.move, map);
         spots.forEach(function (i) {
             $(".map-cell[data-x=" + i.x + "][data-y=" + i.y + "][data-z=" + i.z + "]")
                 .addClass('map-cell_moveable');
         });
-    }
-    /**
-     * buildActionGraph
-     *
-     * @return {any[]} items in the graph that are within basic range
-     */
-    function buildActionGraph(position, range) {
-        //in combination with the Direction enum, we have an easy way to move around the grid
-        var spots = [], x = position.x, y = position.y, z = position.z;
-        if (!map.grid[z][y][x] || !map.grid[z][y][x]._id) {
-            console.error("Start position is not on the map");
-            return [];
-        }
-        map.grid.forEach(function (level, z) {
-            if (level.length > 0) {
-                var p = new Topos(position.x, position.y, z, position.dir);
-                //absolutely no intended nazi symbolism in this algorithm
-                spots = spots.concat(traverseHorizontalFirst(1, 1, p, range))
-                    .concat(traverseVerticalFirst(-1, 1, p, range))
-                    .concat(traverseHorizontalFirst(-1, -1, p, range))
-                    .concat(traverseVerticalFirst(1, -1, p, range));
-            }
-        });
-        return spots;
-    }
-    function traverseHorizontalFirst(hor, vert, p, range) {
-        var spots = []; //create accumulator
-        p = new Topos(p.x + hor, p.y, p.z, p.dir);
-        //handle base cases
-        if (range > 0 && p.x >= 0 && p.x < map.size.x) {
-            if (map.grid[p.z][p.y][p.x]._id)
-                spots.push(p);
-            spots = spots.concat(traverseHorizontalFirst(hor, vert, p, range - 1))
-                .concat(traverseVertical(vert, p, range - 1));
-        }
-        return spots;
-    }
-    function traverseVerticalFirst(hor, vert, p, range) {
-        var spots = []; //create accumulator
-        p = new Topos(p.x, p.y + vert, p.z, p.dir);
-        //handle base cases
-        if (range > 0 && p.y >= 0 && p.y < map.size.y) {
-            if (map.grid[p.z][p.y][p.x]._id)
-                spots.push(p);
-            spots = spots.concat(traverseVerticalFirst(hor, vert, p, range - 1))
-                .concat(traverseHorizontal(hor, p, range - 1));
-        }
-        return spots;
-    }
-    function traverseVertical(vert, p, range) {
-        var spots = []; //create accumulator
-        //update position
-        p = new Topos(p.x, p.y + vert, p.z, p.dir);
-        //handle base cases
-        if (range > 0 && p.y >= 0 && p.y < map.size.y) {
-            if (map.grid[p.z][p.y][p.x]._id)
-                spots.push(p);
-            spots = spots.concat(traverseVertical(vert, p, range - 1));
-        }
-        return spots;
-    }
-    function traverseHorizontal(hor, p, range) {
-        var spots = []; //create accumulator
-        p = new Topos(p.x + hor, p.y, p.z, p.dir);
-        //handle base cases
-        if (range > 0 && p.x >= 0 && p.x < map.size.x) {
-            if (map.grid[p.z][p.y][p.x]._id)
-                spots.push(p);
-            spots = spots.concat(traverseHorizontal(hor, p, range - 1));
-        }
-        return spots;
     }
     /**
      * This function is called to stop movement action.
@@ -273,7 +202,7 @@ var UI;
      * ToDo: this should be calculated.
      */
     function showAttackGrid() {
-        var spots = buildActionGraph(currentTurn.position, currentTurn.getWeapon().range.max);
+        var spots = MapHelper.buildBasicRange(currentTurn.position, currentTurn.getWeapon().range.max, map);
         spots.forEach(function (i) {
             $(".map-cell[data-x=" + i.x + "][data-y=" + i.y + "][data-z=" + i.z + "]")
                 .addClass('map-cell_attackable');
@@ -308,7 +237,7 @@ var UI;
         //how do I stop needing the currentTurn object?
         //we only do something if there is a character with a turn
         if (currentTurn) {
-            var x = parseInt(this.getAttribute('data-x'), 10), y = parseInt(this.getAttribute('data-y'), 10), z = parseInt(this.getAttribute('data-z'), 10), $cell;
+            var x = this.getAttribute('data-x') >> 0, y = this.getAttribute('data-y') >> 0, z = this.getAttribute('data-z') >> 0, $cell;
             $cell = DomHelper.getMapCell($rows, x, y, z);
             //selected position may fail
             if (DomHelper.moveableMapCell($cell)) {
@@ -330,7 +259,7 @@ var UI;
      */
     function attack() {
         if (currentTurn) {
-            var x = this.getAttribute('data-x'), y = this.getAttribute('data-y'), z = this.getAttribute('data-z'), $cell, patientId, patient, effect = currentTurn.getAttackEffect();
+            var x = this.getAttribute('data-x') >> 0, y = this.getAttribute('data-y') >> 0, z = this.getAttribute('data-z') >> 0, $cell, patientId, patient, effect = currentTurn.getAttackEffect();
             //get effected cell
             $cell = DomHelper.getMapCell($rows, x, y, z);
             //selected position may fail
