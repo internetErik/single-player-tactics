@@ -11,7 +11,6 @@ module MapHelper {
 	 * @param {number}  range 			The max range to calculate for
 	 * @param {any}  		map 				The map we are calculating on
 	 * @return {Topos[]} items on the map that are within basic range
-	 * 
 	 */
 	export function buildBasicRange(position: Topos, range: number, map: any): Topos[] {
 		//in combination with the Direction enum, we have an easy way to move around the grid

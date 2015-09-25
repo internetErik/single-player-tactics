@@ -227,7 +227,6 @@ module UI {
 
 	/**
 	 * Shows the moveable area.  
-	 * Should calculate this, but now just effects entire area.
 	 */
 	function showMoveGrid(): void {
 
@@ -249,8 +248,6 @@ module UI {
 
 	/**
 	 * Add attackable class to all map cells
-	 *
-	 * ToDo: this should be calculated.
 	 */
 	function showAttackGrid(): void {
 		var spots = MapHelper.buildBasicRange(currentTurn.position, currentTurn.getWeapon().range.max, map);
