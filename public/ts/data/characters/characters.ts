@@ -137,7 +137,7 @@ var characters = [
 		_id: '78a5ae45-5fbb-4edc-8c96-01b031b29d8e',
 		team: 1,
 		stats: {
-			name: 'Liesl',
+			name: 'Craig',
 			exp: 0,
 			jxp: 0,
 			level: 1,

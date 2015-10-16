@@ -8,7 +8,7 @@
  ☐ Secondary menu for attack that will house job skills and selected secondary skills
    ☐ ? How will program state be managed.  Will the same approach work?
 
- ☐ Algorithm for determining area of affect (for movement, and attack)
+ ✔ Algorithm for determining area of affect (for movement, and attack) @done (15-09-29 19:45)
    ☐ Upgrade to consider height
    ☐ Upgrade to consider a type of attack/movement
  
