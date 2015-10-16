@@ -10,4 +10,8 @@
 	& + .map-level + .map-level {
 		transform: translate(-10px, -10px);
 	}
+
+	& + .map-level + .map-level + .map-level {
+		transform: translate(-15px, -15px);
+	}
 }

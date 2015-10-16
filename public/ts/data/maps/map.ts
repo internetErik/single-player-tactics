@@ -6,7 +6,7 @@ var basicMap = {
 		//all of these are 1 based
 		x: 10,
 		y: 10,
-		z: 3
+		z: 4
 	},
 	grid: [ 
 		//depth of 0
@@ -265,11 +265,7 @@ var basicMap = {
 				_id: '1',
 				ground: 'stone',
 				trap: false,
-			},{
-				_id: '1',
-				ground: 'stone',
-				trap: false,
-			},{
+			},{},{
 				_id: '1',
 				ground: 'stone',
 				trap: false,
@@ -453,11 +449,40 @@ var basicMap = {
 				_id: '1',
 				ground: 'stone',
 				trap: false,
-			},{
-				_id: '1',
-				ground: 'stone',
-				trap: false,
-			}]
+			},{}]
+		],
+		//depth of 3
+		[
+				//order of array determines x,y coordinates
+				// an empty object will be drawn as a div that isn't moveable
+				//y===0
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===1
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===2
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===3
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===4
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===5
+				[{}, {}, {}, {}, {
+						_id: '1',
+						ground: 'stone',
+						trap: false
+				}, {}, {}, {}, {}, {}],
+				//y===6
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===7
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===8
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+				//y===9
+				[{}, {}, {}, {}, {}, {}, {}, {}, {}, {
+						_id: '1',
+						ground: 'stone',
+						trap: false
+				}]
 		]
 	]
 };

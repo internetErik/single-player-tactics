@@ -4812,6 +4812,10 @@ input {
     -webkit-transform: translate(-10px, -10px);
         -ms-transform: translate(-10px, -10px);
             transform: translate(-10px, -10px); }
+  .map-level + .map-level + .map-level + .map-level {
+    -webkit-transform: translate(-15px, -15px);
+        -ms-transform: translate(-15px, -15px);
+            transform: translate(-15px, -15px); }
 
 .map-row {
   overflow: hidden; }
