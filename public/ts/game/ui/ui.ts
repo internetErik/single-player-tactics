@@ -151,14 +151,17 @@ module UI {
 		$('#action-menu [data-action=move]').click(turnModeMove);
 		$('#action-menu [data-action=attack]').click(turnModeAttack);
 		$('#action-menu [data-action=wait]').click(characterWait);
+		$('#action-menu [data-action=cancel]').click(cancelAction);
 
 		$(window).on('keyup', (e) => {
-			if (e.keyCode === 77) //'m' = move
-				turnModeMove();
-			else if (e.keyCode === 65)//'a' = attack
-				turnModeAttack();
-			else if (e.keyCode === 87)//'w' = wait
-				characterWait();
+				if (e.keyCode === 77) //'m' = move
+						turnModeMove();
+				else if (e.keyCode === 65)//'a' = attack
+						turnModeAttack();
+				else if (e.keyCode === 87)//'w' = wait
+						characterWait();
+				else if (e.keyCode === 67)//'c' = cancel
+						cancelAction();
 		});
 	}
 
@@ -410,13 +413,20 @@ module UI {
 		}
 	}
 
+	function cancelAction(): void {
+		if(currentTurn && (turnMode === 'move' || turnMode === 'attack')) {
+				turnMode = null;
+				defaultMapState();
+		}
+	}
+
 	/**
 	 * The function triggered by clicking the 'move' button in the menu
 	 * or pressing 'm' when a player has a turn
 	 */
 	function turnModeMove(): void {
 		//we only do something if there is a character with a turn
-		if(currentTurn && ! moved) {
+		if(currentTurn && ! moved && turnMode === null) {
 			showMoveGrid();
 			turnMode = 'move';
 		}
@@ -427,7 +437,7 @@ module UI {
 	 * or pressing 'a' when a player has a turn
 	 */
 	function turnModeAttack(): void {
-		if(currentTurn && ! acted) {
+		if(currentTurn && ! acted && turnMode === null) {
 			showAttackGrid();
 			turnMode = 'attack';
 		}

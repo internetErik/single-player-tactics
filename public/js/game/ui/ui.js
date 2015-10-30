@@ -125,6 +125,7 @@ var UI;
         $('#action-menu [data-action=move]').click(turnModeMove);
         $('#action-menu [data-action=attack]').click(turnModeAttack);
         $('#action-menu [data-action=wait]').click(characterWait);
+        $('#action-menu [data-action=cancel]').click(cancelAction);
         $(window).on('keyup', function (e) {
             if (e.keyCode === 77)
                 turnModeMove();
@@ -132,6 +133,8 @@ var UI;
                 turnModeAttack();
             else if (e.keyCode === 87)
                 characterWait();
+            else if (e.keyCode === 67)
+                cancelAction();
         });
     }
     /**
@@ -332,13 +335,19 @@ var UI;
             clearCurrentTurn(50); //pass in a value to set character turn to
         }
     }
+    function cancelAction() {
+        if (currentTurn && (turnMode === 'move' || turnMode === 'attack')) {
+            turnMode = null;
+            defaultMapState();
+        }
+    }
     /**
      * The function triggered by clicking the 'move' button in the menu
      * or pressing 'm' when a player has a turn
      */
     function turnModeMove() {
         //we only do something if there is a character with a turn
-        if (currentTurn && !moved) {
+        if (currentTurn && !moved && turnMode === null) {
             showMoveGrid();
             turnMode = 'move';
         }
@@ -348,7 +357,7 @@ var UI;
      * or pressing 'a' when a player has a turn
      */
     function turnModeAttack() {
-        if (currentTurn && !acted) {
+        if (currentTurn && !acted && turnMode === null) {
             showAttackGrid();
             turnMode = 'attack';
         }
